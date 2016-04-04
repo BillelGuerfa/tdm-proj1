@@ -7,6 +7,7 @@ import java.util.List;
  * Created by Billel Guerfa on 03/04/2016.
  */
 public class Produit implements Serializable{
+    private int photo;
     private String nom;
     private String couleur;
     private String marque;
