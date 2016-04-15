@@ -13,22 +13,15 @@ public class Produit implements Serializable{
     private String marque;
     private String reference;
 
-    public List<Categorie> getCategories() {
-        return categories;
-    }
 
-    public Produit(String nom, String couleur, String marque, String reference, String taille, int longeur, List<Categorie> categories) {
+
+    public Produit(String nom, String couleur, String marque, String reference, String taille, int longeur) {
         this.nom = nom;
         this.couleur = couleur;
         this.marque = marque;
         this.reference = reference;
         this.taille = taille;
         this.longeur = longeur;
-        this.categories = categories;
-    }
-
-    public void setCategories(List<Categorie> categories) {
-        this.categories = categories;
     }
 
     public String getNom() {
@@ -81,5 +74,5 @@ public class Produit implements Serializable{
 
     private String taille;
     private int longeur;
-    private List<Categorie> categories;
+
 }

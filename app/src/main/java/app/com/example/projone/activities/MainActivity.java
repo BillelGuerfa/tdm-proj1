@@ -2,6 +2,7 @@ package app.com.example.projone.activities;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -16,12 +17,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.com.example.billelguerfa.projone.R;
+import app.com.example.billelguerfa.projone.modele.Categorie;
+import app.com.example.projone.adapters.CategoriesAdapter;
 
 public class MainActivity extends AppCompatActivity {
-
+    private List<Categorie> categories;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -44,23 +51,48 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //TODO: Fix this later.
+        this.categories = new ArrayList<Categorie>();
+        Categorie homme = new Categorie(true,"Homme");
+        Categorie femme = new Categorie(true,"Femme");
+        Categorie enfant = new Categorie(true,"Enfant");
+        this.categories.add(homme);
+        this.categories.add(femme);
+        this.categories.add(enfant);
+        Categorie haut = new Categorie(false,"Haut");
+        haut.setIcon(R.drawable.ic_agilecovrer);
+        Categorie bas = new Categorie(false,"Bas");
+        bas.setIcon(R.drawable.ic_agilecovrer);
+        Categorie accessoires = new Categorie(false,"Accessoires");
+        accessoires.setIcon(R.drawable.ic_agilecovrer);
+        Categorie hautFemmes = new Categorie(false,"Haut");
+        hautFemmes.setIcon(R.drawable.ic_agilecovrer);
+        Categorie basFemmes = new Categorie(false,"Bas");
+        basFemmes.setIcon(R.drawable.ic_agilecovrer);
+        homme.getSousCategories().add(bas);
+        homme.getSousCategories().add(accessoires);
+        femme.getSousCategories().add(hautFemmes);
+        Categorie accessoiresFemme = new Categorie(false,"Accessoires");
+        accessoires.setIcon(R.drawable.ic_agilecovrer);
+        homme.getSousCategories().add(haut);
+        femme.getSousCategories().add(basFemmes);
+        femme.getSousCategories().add(accessoiresFemme);
+        haut.getSousCategories().add(new Categorie(false,"T-Shirt"));
+        haut.getSousCategories().add(new Categorie(false,"Chemises"));
+        bas.getSousCategories().add(new Categorie(false,"Pantalons"));
+        basFemmes.getSousCategories().add(new Categorie(false,"Jupes"));
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),(ArrayList<Categorie>)this.categories);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
     }
 
@@ -96,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-
+        private static final String ARG_CATEGORIE = "categorie";
         public PlaceholderFragment() {
         }
 
@@ -104,10 +136,10 @@ public class MainActivity extends AppCompatActivity {
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
+        public static PlaceholderFragment newInstance(ArrayList<Categorie> categories) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            args.putSerializable(ARG_CATEGORIE, categories);
             fragment.setArguments(args);
             return fragment;
         }
@@ -116,8 +148,10 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            ArrayList<Categorie> categories = (ArrayList) getArguments().getSerializable(ARG_CATEGORIE);
+
+            ListView listeCategories = (ListView) rootView.findViewById(R.id.liste_categories);
+            listeCategories.setAdapter(new CategoriesAdapter(getActivity(),categories));
             return rootView;
         }
     }
@@ -127,35 +161,28 @@ public class MainActivity extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
+        private ArrayList<Categorie> categories;
+        public SectionsPagerAdapter(FragmentManager fm,ArrayList<Categorie> categories) {
             super(fm);
+            this.categories = categories;
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance((ArrayList<Categorie>)this.categories.get(position).getSousCategories());
         }
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return this.categories.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
+            return this.categories.get(position).getNom();
         }
     }
 }
