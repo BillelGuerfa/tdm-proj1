@@ -3,4 +3,22 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="textTaille">Taille :</string>
+    <string name="textQuantite">Quantite :</string>
+    <string name="textDescription">Description :</string>
+    <string name="textContenu">Contenu :</string>
+    <string name="textCouleur">couleur</string>
+    <string name="textPointure">Pointure</string>
+    <string name="ajoutePanier">Ajouter au panier</string>
+
+
+
+
+
+
+
+
+
 </resources>
