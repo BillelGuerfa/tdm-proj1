@@ -1,5 +1,6 @@
 package app.com.example.projone.activities;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -17,8 +18,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
         bas.setIcon(R.drawable.ic_agilecovrer);
         Categorie accessoires = new Categorie(false,"Accessoires");
         accessoires.setIcon(R.drawable.ic_agilecovrer);
-        Categorie hautFemmes = new Categorie(false,"Haut");
+        Categorie hautFemmes = new Categorie(false,"HautFemmes");
         hautFemmes.setIcon(R.drawable.ic_agilecovrer);
-        Categorie basFemmes = new Categorie(false,"Bas");
+        Categorie basFemmes = new Categorie(false,"BasFemmes");
         basFemmes.setIcon(R.drawable.ic_agilecovrer);
         homme.getSousCategories().add(bas);
         homme.getSousCategories().add(accessoires);
@@ -78,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
         homme.getSousCategories().add(haut);
         femme.getSousCategories().add(basFemmes);
         femme.getSousCategories().add(accessoiresFemme);
-        haut.getSousCategories().add(new Categorie(false,"T-Shirt"));
-        haut.getSousCategories().add(new Categorie(false,"Chemises"));
+        haut.getSousCategories().add(haut);
+        haut.getSousCategories().add(haut);
         bas.getSousCategories().add(new Categorie(false,"Pantalons"));
         basFemmes.getSousCategories().add(new Categorie(false,"Jupes"));
 
@@ -93,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
 
     }
 
@@ -129,6 +136,9 @@ public class MainActivity extends AppCompatActivity {
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
         private static final String ARG_CATEGORIE = "categorie";
+        private GridView listeCategories;
+        ArrayList<Categorie> categories;
+        CategoriesAdapter adapter;
         public PlaceholderFragment() {
         }
 
@@ -148,10 +158,28 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            ArrayList<Categorie> categories = (ArrayList) getArguments().getSerializable(ARG_CATEGORIE);
+            categories = (ArrayList) getArguments().getSerializable(ARG_CATEGORIE);
+            listeCategories = (GridView) rootView.findViewById(R.id.liste_categories);
+            adapter = new CategoriesAdapter(getActivity(),categories);
+            listeCategories.setAdapter(adapter);
+            listeCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (categories.get(position).getSousCategories().isEmpty()) {
+                        Intent intent;
+                        //TODO: Send to products activity
+                    } else {
 
-            ListView listeCategories = (ListView) rootView.findViewById(R.id.liste_categories);
-            listeCategories.setAdapter(new CategoriesAdapter(getActivity(),categories));
+                        Toast.makeText(getContext(),categories.get(position).getNom(),Toast.LENGTH_SHORT).show();
+                        ArrayList<Categorie> sousCategories = (ArrayList)categories.get(position).getSousCategories();
+                        categories.clear();
+                        categories.addAll(sousCategories);
+                        adapter.notifyDataSetChanged();
+
+                    }
+                }
+            });
+
             return rootView;
         }
     }
