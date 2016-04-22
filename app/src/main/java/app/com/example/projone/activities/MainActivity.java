@@ -26,11 +26,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import app.com.example.billelguerfa.projone.R;
 import app.com.example.billelguerfa.projone.modele.Categorie;
+import app.com.example.billelguerfa.projone.modele.Produit;
 import app.com.example.projone.adapters.CategoriesAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,27 +68,47 @@ public class MainActivity extends AppCompatActivity {
         this.categories.add(homme);
         this.categories.add(femme);
         this.categories.add(enfant);
+
         Categorie haut = new Categorie(false,"Haut");
         haut.setIcon(R.drawable.ic_agilecovrer);
+
         Categorie bas = new Categorie(false,"Bas");
         bas.setIcon(R.drawable.ic_agilecovrer);
+
         Categorie accessoires = new Categorie(false,"Accessoires");
         accessoires.setIcon(R.drawable.ic_agilecovrer);
-        Categorie hautFemmes = new Categorie(false,"HautFemmes");
+
+        Categorie chaussures = new Categorie(false,"Chaussures");
+        chaussures.setIcon(R.drawable.ic_androidfd);
+
+        Categorie costumes = new Categorie(false,"Costumes");
+        costumes.setIcon(R.drawable.ic_androidfd);
+
+        Categorie hautFemmes = new Categorie(false,"Haut");
         hautFemmes.setIcon(R.drawable.ic_agilecovrer);
-        Categorie basFemmes = new Categorie(false,"BasFemmes");
+
+        Categorie basFemmes = new Categorie(false,"Bas");
         basFemmes.setIcon(R.drawable.ic_agilecovrer);
+
+        Categorie accessoiresFemme = new Categorie(false,"Accessoires");
+        accessoiresFemme.setIcon(R.drawable.ic_agilecovrer);
+
+        homme.getSousCategories().add(haut);
         homme.getSousCategories().add(bas);
         homme.getSousCategories().add(accessoires);
+
+        haut.getSousCategories().add(new Categorie(false,"Chemises"));
+        haut.getSousCategories().add(new Categorie(false,"T-Shirt"));
+        haut.getSousCategories().add(new Categorie(false,"Vestes"));
+        haut.getSousCategories().add(new Categorie(false,""));
+        bas.getSousCategories().add(new Categorie(false,"Pantalons"));
+
         femme.getSousCategories().add(hautFemmes);
-        Categorie accessoiresFemme = new Categorie(false,"Accessoires");
-        accessoires.setIcon(R.drawable.ic_agilecovrer);
-        homme.getSousCategories().add(haut);
         femme.getSousCategories().add(basFemmes);
         femme.getSousCategories().add(accessoiresFemme);
-        haut.getSousCategories().add(haut);
-        haut.getSousCategories().add(haut);
-        bas.getSousCategories().add(new Categorie(false,"Pantalons"));
+
+
+
         basFemmes.getSousCategories().add(new Categorie(false,"Jupes"));
 
         // Create the adapter that will return a fragment for each of the three
@@ -121,6 +143,9 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if (id == R.id.action_cart) {
+            //TODO: Intent vers Panier ici.
         }
 
         return super.onOptionsItemSelected(item);
@@ -166,8 +191,12 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (categories.get(position).getSousCategories().isEmpty()) {
-                        Intent intent;
+                        Intent intent ; //TODO: Create intent here with the product list activity
                         //TODO: Send to products activity
+                        ArrayList<Produit> produits = new ArrayList<Produit>();
+                        //TODO:Copy product list here.
+
+
                     } else {
 
                         Toast.makeText(getContext(),categories.get(position).getNom(),Toast.LENGTH_SHORT).show();
