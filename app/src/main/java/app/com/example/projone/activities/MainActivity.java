@@ -1,5 +1,6 @@
 package app.com.example.projone.activities;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,11 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.com.example.billelguerfa.projone.R;
+import app.com.example.billelguerfa.projone.modele.Produit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +67,31 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        List<Produit> produitList = new ArrayList<>();
+        produitList.add(new Produit(R.drawable.ic_italie_paul_et_shark_homme_polos_meilleur_prix_1016,"polo",100));
+
+        produitList.add(new Produit(R.drawable.ic_2013_fashion_mens_stripe_paul_shark_short_polo_shirt_red_grey_black_lrg,"Ralph",200));
+
+        produitList.add(new Produit(R.drawable.ic__32,"Tommy",300));
+
+        produitList.add(new Produit(R.drawable.ic_corec1p11104sfi010_1x,"triicoo",400));
+
+        produitList.add(new Produit(R.drawable.ic_fashion_paul_and_shark_long_sleeved_shirts_best_price_453, "geek", 500));
+
+        produitList.add(new Produit(R.drawable.ic_img_thing, "paul&shark", 500));
+
+        produitList.add(new Produit(R.drawable.ic_nyp0902224_sale_stripes_paul_shark_homme_short_polo_shirt_yellow_boutique_vente, "mongo", 500));
+
+        produitList.add(new Produit(R.drawable.ic__32,"celio",300));
+
+        Intent intent = new Intent( this ,ListeProduitsActivity.class);
+        intent.putExtra("listp", (ArrayList<Produit>) produitList);
+
+        startActivity(intent);
+
+
 
     }
 
@@ -115,9 +146,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            View rootView = inflater.inflate(R.layout.activity_liste_produits, container, false);
+            //TextView textView = (TextView) rootView.findViewById(R.id.);
+            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
     }

@@ -12,6 +12,7 @@ public class Produit implements Serializable{
     private String couleur;
     private String marque;
     private String reference;
+    private float prix;
 
     public List<Categorie> getCategories() {
         return categories;
@@ -25,6 +26,28 @@ public class Produit implements Serializable{
         this.taille = taille;
         this.longeur = longeur;
         this.categories = categories;
+    }
+
+    public Produit(int photo, String marque, float prix) {
+        this.photo = photo;
+        this.marque = marque;
+        this.prix = prix;
+    }
+
+    public float getPrix() {
+        return prix;
+    }
+
+    public void setPrix(float prix) {
+        this.prix = prix;
+    }
+
+    public int getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(int photo) {
+        this.photo = photo;
     }
 
     public void setCategories(List<Categorie> categories) {
