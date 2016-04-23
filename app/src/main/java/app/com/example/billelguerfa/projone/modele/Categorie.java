@@ -9,6 +9,12 @@ import java.util.List;
 public class Categorie implements Serializable{
     boolean racine;
 
+    public String getNom() {
+        return nom;
+    }
+
+    String nom;
+
     public Categorie(boolean racine, List<Categorie> sousCategories) {
         this.racine = racine;
         this.sousCategories = sousCategories;
@@ -31,4 +37,5 @@ public class Categorie implements Serializable{
     }
 
     private List<Categorie> sousCategories;
+
 }
