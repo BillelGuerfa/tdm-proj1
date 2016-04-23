@@ -8,10 +8,25 @@ import java.util.List;
  * Created by Billel Guerfa on 04/04/2016.
  */
 public class Categorie implements Serializable{
-    boolean racine;
+
    private String nom;
     private int icon;
     private List<Produit> produits;
+    Categorie parent;
+
+    public Categorie(Categorie parent,  String nom, int icon) {
+        this.parent = parent;
+        this.icon = icon;
+        this.nom = nom;
+    }
+
+    public Categorie getParent() {
+        return parent;
+    }
+
+    public void setParent(Categorie parent) {
+        this.parent = parent;
+    }
 
     public List<Produit> getProduits() {
         return produits;
@@ -27,8 +42,8 @@ public class Categorie implements Serializable{
     public void setIcon(int icon) {
         this.icon = icon;
     }
-    public Categorie(boolean racine, String nom) {
-        this.racine = racine;
+    public Categorie(Categorie parent, String nom) {
+        this.parent = parent;
         this.nom = nom;
         this.sousCategories = new ArrayList<Categorie>();
     }
@@ -41,17 +56,9 @@ public class Categorie implements Serializable{
         this.nom = nom;
     }
 
-    public Categorie(boolean racine, List<Categorie> sousCategories) {
-        this.racine = racine;
+    public Categorie(Categorie parent, List<Categorie> sousCategories) {
+        this.parent = parent;
         this.sousCategories = sousCategories;
-    }
-
-    public boolean isRacine() {
-        return racine;
-    }
-
-    public void setRacine(boolean racine) {
-        this.racine = racine;
     }
 
     public List<Categorie> getSousCategories() {

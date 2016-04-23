@@ -1,6 +1,7 @@
 package app.com.example.projone.activities;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -40,7 +41,7 @@ import app.com.example.billelguerfa.projone.modele.Produit;
 import app.com.example.projone.adapters.CategoriesAdapter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private List<Categorie> categories;
+    private Categorie categorie;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -73,63 +74,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //TODO: Fix this later.
-        this.categories = new ArrayList<Categorie>();
-        Categorie homme = new Categorie(true,"Homme");
-        Categorie femme = new Categorie(true,"Femme");
-        Categorie enfant = new Categorie(true,"Enfant");
-        this.categories.add(homme);
-        this.categories.add(femme);
-        this.categories.add(enfant);
-
-        Categorie haut = new Categorie(false,"Haut");
-        haut.setIcon(R.drawable.ic_agilecovrer);
-
-        Categorie bas = new Categorie(false,"Bas");
-        bas.setIcon(R.drawable.ic_agilecovrer);
-
-        Categorie accessoires = new Categorie(false,"Accessoires");
-        accessoires.setIcon(R.drawable.ic_agilecovrer);
-
-        Categorie chaussures = new Categorie(false,"Chaussures");
-        chaussures.setIcon(R.drawable.ic_androidfd);
-
-        Categorie costumes = new Categorie(false,"Costumes");
-        costumes.setIcon(R.drawable.ic_androidfd);
-
-        Categorie hautFemmes = new Categorie(false,"Haut");
-        hautFemmes.setIcon(R.drawable.ic_agilecovrer);
-
-        Categorie basFemmes = new Categorie(false,"Bas");
-        basFemmes.setIcon(R.drawable.ic_agilecovrer);
-
-        Categorie accessoiresFemme = new Categorie(false,"Accessoires");
-        accessoiresFemme.setIcon(R.drawable.ic_agilecovrer);
-
-        homme.getSousCategories().add(haut);
-        homme.getSousCategories().add(bas);
-        homme.getSousCategories().add(accessoires);
-
-        haut.getSousCategories().add(new Categorie(false,"Chemises"));
-        haut.getSousCategories().add(new Categorie(false,"T-Shirt"));
-        haut.getSousCategories().add(new Categorie(false,"Vestes"));
-        bas.getSousCategories().add(new Categorie(false,"Pantalons"));
-
-        femme.getSousCategories().add(hautFemmes);
-        femme.getSousCategories().add(basFemmes);
-        femme.getSousCategories().add(accessoiresFemme);
-
-
-
-        basFemmes.getSousCategories().add(new Categorie(false, "Jupes"));
-
-
-
-
+        this.createCategories(); //instancie les catégories
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),(ArrayList<Categorie>)this.categories);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),this.categorie);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -172,7 +121,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+
+            GridView gridView = (GridView) findViewById(R.id.liste_categories);
+            CategoriesAdapter adapter = (CategoriesAdapter)gridView.getAdapter();
+            if(adapter.getCategorie() != null && adapter.getCategorie().getParent() != null){
+                adapter.setCategorie(adapter.getCategorie().getParent());
+                adapter.notifyDataSetChanged();
+            }else {
+                super.onBackPressed();
+            }
+
         }
     }
 
@@ -210,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private static final String ARG_SECTION_NUMBER = "section_number";
         private static final String ARG_CATEGORIE = "categorie";
         private GridView listeCategories;
-        ArrayList<Categorie> categories;
+        Categorie categorie;
         CategoriesAdapter adapter;
         public PlaceholderFragment() {
         }
@@ -219,10 +177,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(ArrayList<Categorie> categories) {
+        public static PlaceholderFragment newInstance(Categorie categorie) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putSerializable(ARG_CATEGORIE, categories);
+            args.putSerializable(ARG_CATEGORIE, categorie);
             fragment.setArguments(args);
             return fragment;
         }
@@ -231,28 +189,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            categories = (ArrayList) getArguments().getSerializable(ARG_CATEGORIE);
+            categorie = (Categorie) getArguments().getSerializable(ARG_CATEGORIE);
             listeCategories = (GridView) rootView.findViewById(R.id.liste_categories);
-            adapter = new CategoriesAdapter(getActivity(),categories);
+            adapter = new CategoriesAdapter(getActivity(),categorie);
             listeCategories.setAdapter(adapter);
             listeCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (categories.get(position).getSousCategories().isEmpty()) {
+                    if (adapter.getCategorie().getSousCategories().get(position).getSousCategories().isEmpty()) {
                         Intent intent ; //TODO: Create intent here with the product list activity
                         //TODO: Send to products activity
                         ArrayList<Produit> produits = new ArrayList<Produit>();
                         //TODO:Copy product list here.
-
-
                     } else {
-
-                        Toast.makeText(getContext(),categories.get(position).getNom(),Toast.LENGTH_SHORT).show();
-                        ArrayList<Categorie> sousCategories = (ArrayList)categories.get(position).getSousCategories();
-                        categories.clear();
-                        categories.addAll(sousCategories);
-                        adapter.notifyDataSetChanged();
-
+                        adapter.setCategorie(adapter.getCategorie().getSousCategories().get(position));
                     }
                 }
             });
@@ -266,28 +216,102 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private ArrayList<Categorie> categories;
-        public SectionsPagerAdapter(FragmentManager fm,ArrayList<Categorie> categories) {
+        private Categorie categorie;
+        public SectionsPagerAdapter(FragmentManager fm,Categorie categorie) {
             super(fm);
-            this.categories = categories;
+            this.categorie = categorie;
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance((ArrayList<Categorie>)this.categories.get(position).getSousCategories());
+            return PlaceholderFragment.newInstance(this.categorie.getSousCategories().get(position));
         }
+
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return this.categories.size();
+            return this.categorie.getSousCategories().size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return this.categories.get(position).getNom();
+            return this.categorie.getSousCategories().get(position).getNom();
         }
+    }
+    private void createCategories(){
+        this.categorie = new Categorie(null,"root");
+        Categorie homme = new Categorie(this.categorie,"Homme");
+        Categorie femme = new Categorie(this.categorie,"Femme");
+        Categorie enfant = new Categorie(this.categorie,"Enfant");
+        this.categorie.getSousCategories().add(homme);
+        this.categorie.getSousCategories().add(femme);
+        this.categorie.getSousCategories().add(enfant);
+
+        Categorie haut = new Categorie(homme,"Haut");
+        haut.setIcon(R.drawable.ic_haut);
+
+        Categorie bas = new Categorie(homme,"Bas");
+        bas.setIcon(R.drawable.ic_bas);
+
+        Categorie accessoires = new Categorie(homme,"Accessoires");
+        accessoires.setIcon(R.drawable.ic_accessoires);
+
+        Categorie chaussures = new Categorie(homme,"Chaussures");
+        chaussures.setIcon(R.drawable.ic_chaussureshomme);
+
+        Categorie costumes = new Categorie(homme,"Costumes");
+        costumes.setIcon(R.drawable.ic_costumes);
+
+        Categorie hautFemmes = new Categorie(femme,"Haut");
+        hautFemmes.setIcon(R.drawable.ic_hautfemmes);
+
+        Categorie basFemmes = new Categorie(femme,"Bas");
+        basFemmes.setIcon(R.drawable.ic_basfemmes);
+
+        Categorie chaussuresFemme = new Categorie(femme,"Chaussures");
+        chaussuresFemme.setIcon(R.drawable.ic_chaussuresfemme);
+
+        Categorie accessoiresFemme = new Categorie(femme,"Accessoires");
+        accessoiresFemme.setIcon(R.drawable.ic_accessoiresfemme);
+
+        homme.getSousCategories().add(haut);
+        homme.getSousCategories().add(bas);
+        homme.getSousCategories().add(chaussures);
+        homme.getSousCategories().add(accessoires);
+
+        Categorie chemises = new Categorie(haut, "Chemises");
+        chemises.setIcon(R.drawable.ic_chemise);
+        haut.getSousCategories().add(chemises);
+        Categorie tshirt = new Categorie(haut,"T-Shirt");
+        tshirt.setIcon(R.drawable.ic_haut);
+        haut.getSousCategories().add(tshirt);
+        Categorie vestes = new Categorie(haut,"Vestes");
+        vestes.setIcon(R.drawable.ic_vestes);
+        haut.getSousCategories().add(vestes);
+        Categorie pantalons = new Categorie(bas,"Pantalons");
+        pantalons.setIcon(R.drawable.ic_bas);
+        bas.getSousCategories().add(pantalons);
+
+        femme.getSousCategories().add(hautFemmes);
+        femme.getSousCategories().add(basFemmes);
+        femme.getSousCategories().add(chaussuresFemme);
+        femme.getSousCategories().add(accessoiresFemme);
+
+        Categorie hautEnfants = new Categorie(enfant,"Haut");
+        hautEnfants.setIcon(R.drawable.ic_hautenfants);
+
+        Categorie basEnfants = new Categorie(enfant,"Bas");
+        basEnfants.setIcon(R.drawable.ic_basenfants);
+
+        Categorie chaussuresEnfants = new Categorie(enfant,"Chaussures");
+        chaussuresEnfants.setIcon(R.drawable.ic_chaussuresenfant);
+
+        enfant.getSousCategories().add(hautEnfants);
+        enfant.getSousCategories().add(basEnfants);
+        enfant.getSousCategories().add(chaussuresEnfants);
+
     }
 }

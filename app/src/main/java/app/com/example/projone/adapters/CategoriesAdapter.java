@@ -17,21 +17,34 @@ import app.com.example.billelguerfa.projone.modele.Categorie;
  */
 public class CategoriesAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<Categorie> categories;
+    private Categorie categorie;
 
-    public CategoriesAdapter(Context context, ArrayList<Categorie> categories) {
+
+
+
+
+    public Categorie getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(Categorie categorie) {
+        this.categorie = categorie;
+        notifyDataSetChanged();
+    }
+
+    public CategoriesAdapter(Context context,Categorie categorie) {
         this.context = context;
-        this.categories = categories;
+        this.categorie = categorie;
     }
 
     @Override
     public int getCount() {
-        return this.categories.size();
+        return this.categorie.getSousCategories().size();
     }
 
     @Override
     public Object getItem(int position) {
-        return this.categories.get(position);
+        return this.categorie.getSousCategories().get(position);
     }
 
     @Override
@@ -48,8 +61,8 @@ public class CategoriesAdapter extends BaseAdapter {
         }
         ImageView icon = (ImageView) convertView.findViewById(R.id.sous_cat_image);
         TextView nom = (TextView) convertView.findViewById(R.id.sous_cat_name);
-        icon.setImageResource(this.categories.get(position).getIcon());
-        nom.setText(this.categories.get(position).getNom());
+        icon.setImageResource(this.categorie.getSousCategories().get(position).getIcon());
+        nom.setText(this.categorie.getSousCategories().get(position).getNom());
 
         return convertView;
     }
