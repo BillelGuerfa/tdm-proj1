@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+
+
+
+
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="6">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bouttonAjouter"
+                    android:layout_alignParentBottom="true"
+                    android:text="@string/ajoutePanier"
+                    android:layout_weight="0"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="6"
+                    android:layout_above="@id/bouttonAjouter"
+                    android:id="@+id/layoutImage">
+
+                    <ImageView
+                        android:src="@drawable/ic_agilecovrer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/coverImage"
+                        android:layout_alignParentTop="true" />
+
+                    <RatingBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ratingBar"
+                        android:layout_gravity="center_horizontal" />
+                </LinearLayout>
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="4"
+            android:id="@+id/layoutDescription">
+
+            <RelativeLayout
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context="dz.esi.activities.DetailActivity">
+
+
+
+                <TextView
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textNom"
+                    android:text=" jean leavis  slim edition 511"
+                    android:layout_below="@+id/coverImage"
+                    android:layout_alignParentLeft="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textPrix"
+                    android:text="70$"
+
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/coverImage" />
+
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/layoutTaille"
+                    android:layout_below="@id/textNom"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textTaille"
+                        android:text="@string/textTaille"
+                        android:layout_alignParentLeft="true"
+                        android:layout_weight="1"/>
+
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinTaille"
+                        android:layout_toRightOf="@id/textTaille"
+                        android:layout_alignParentRight="true"
+                        android:layout_weight="0" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/layoutCouleur"
+                    android:layout_below="@id/textNom"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textCouleur"
+                        android:text="@string/textCouleur"
+                        android:layout_alignParentLeft="true"
+                        android:layout_weight="1"/>
+
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinCouleur"
+                        android:layout_toRightOf="@id/textTaille"
+                        android:layout_alignParentRight="true"
+                        android:layout_weight="0" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/layoutQuantite"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/layoutTaille">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textQuantite"
+                        android:text="@string/textQuantite"
+                        android:layout_alignParentLeft="true"
+                        android:layout_weight="1"/>
+
+                    <EditText
+                        android:layout_width="55dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/editQuantite"
+                        android:layout_alignParentRight="true"
+                        android:inputType="numberSigned"
+                        android:contentDescription="1"
+                        android:layout_weight="0"/>
+
+
+                </LinearLayout>
+
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textDescription"
+                    android:text="Description :"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/layoutQuantite"
+                    android:layout_alignParentLeft="true"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textContenu"
+                    android:layout_below="@+id/textDescription"
+                    android:layout_marginBottom="15dp"
+                    android:text="mlqskdmlqkdmlqkdmlqskdmlqksmldmlsqdqsdfdsfqsd sqdfsdf qsdf dgsd fqs dsq sdqg sdfsdf gqF DG DSQF G"
+                    />
+
+                <!--
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="vous serez interesser par"
+                    android:id="@+id/textSuggestion"
+                    android:layout_below="@id/textContenu"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textSuggestion"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_agilecovrer"
+                        />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_agilecovrer"
+                        />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_agilecovrer"
+                        />
+
+                </LinearLayout>
+                -->
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

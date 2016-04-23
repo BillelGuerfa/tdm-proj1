@@ -33,22 +33,35 @@
                 android:id="@+id/coverImage"
                 android:layout_alignParentTop="true" />
 
-            <TextView
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/textNom"
-                android:text=" jean leavis  slim edition 511"
-                android:layout_below="@+id/coverImage"
-                android:layout_alignParentLeft="true" />
-
-            <TextView
+            <RatingBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textPrix"
-                android:text="70$"
-
-                android:layout_alignParentRight="true"
+                android:id="@+id/ratingBar"
+                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/coverImage" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layoutPrix"
+                android:layout_below="@id/ratingBar"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textNom"
+                    android:paddingRight="50dp"
+                    android:layout_weight="1"
+                    android:text=" jean leavis  slim edition 511" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textPrix"
+                    android:layout_weight="0"
+                    android:text="70$" />
+            </LinearLayout>
+
 
 
 
@@ -58,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/layoutTaille"
-                android:layout_below="@id/textNom"
+                android:layout_below="@id/layoutPrix"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 >
@@ -86,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/layoutCouleur"
-                android:layout_below="@id/textNom"
+                android:layout_below="@id/layoutTaille"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 >
@@ -115,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/layoutQuantite"
                 android:orientation="horizontal"
-                android:layout_below="@id/layoutTaille">
+                android:layout_below="@id/layoutCouleur">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -157,6 +170,8 @@
                 android:layout_marginBottom="15dp"
                 android:text="mlqskdmlqkdmlqkdmlqskdmlqksmldmlsqdqsdfdsfqsd sqdfsdf qsdf dgsd fqs dsq sdqg sdfsdf gqF DG DSQF G"
                 />
+
+
 
             <!--
             <TextView

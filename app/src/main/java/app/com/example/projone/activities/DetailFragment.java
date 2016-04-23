@@ -21,6 +21,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.com.example.billelguerfa.projone.R;
 import app.com.example.billelguerfa.projone.modele.Panier;
 import app.com.example.billelguerfa.projone.modele.Produit;
@@ -34,10 +37,19 @@ public class DetailFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, null);
         Bundle bundle = getArguments();
-        produit= (Produit) bundle.getSerializable("produit");
-        panier=(Panier) bundle.getSerializable("panier");
+       // produit= (Produit) bundle.getSerializable("produit");
+        //panier=(Panier) bundle.getSerializable("panier");
 
+        List<String> l=new ArrayList<>();
+        l.add("32");
+        l.add("34");
+        l.add("36");
+        List<String> L1=new ArrayList<>();
+        L1.add("xxxc");
+        L1.add("bleu");
+        L1.add("vert");
 
+        produit= new Produit("shirt levis marque celioqsdd sdfsq dsqf  sdf ds q sqd","celio","2132156",l,L1);
         if (bundle!=null) {
             ImageView coverImage = (ImageView) view.findViewById(R.id.coverImage);
             TextView textNom= (TextView) view.findViewById(R.id.textNom);
@@ -48,20 +60,22 @@ public class DetailFragment extends android.app.Fragment {
             TextView textContenu=(TextView) view.findViewById(R.id.textContenu);
             Spinner spinTaille=(Spinner) view.findViewById(R.id.spinTaille);
             EditText editQuantite=(EditText) view.findViewById(R.id.editQuantite);
-            Spinner spinQuantite=(Spinner) view.findViewById(R.id.spinQuantite);
             Spinner spinCouleur=(Spinner) view.findViewById(R.id.spinCouleur);
             Button ajouterPanier=(Button) view.findViewById(R.id.bouttonAjouter);
             LinearLayout layoutTaille = (LinearLayout) view.findViewById(R.id.layoutTaille);
             LinearLayout layoutCouleur=(LinearLayout) view.findViewById(R.id.layoutCouleur);
 
             textNom.setText(produit.getNom());
+            //textPrix.setText(produit.getPrix());
+           // textContenu.setText(produit.getDescription());
+            //coverImage.setImageResource(produit.getPhoto());
 
             //-----------changer le texte taille par text pointure si c des chaussures-----------------//
-            if (produit.getCategorie().getNom().equals("Chaussures"))
+/*            if (produit.getCategorie().getNom().equals("Chaussures"))
             {
                 textTaille.setText(getResources().getString(R.string.textPointure));
             }
-
+*/
             ///-------------------------------------------------------------------------------------/////////
 
             ////----------------- cacher la layout de taille si le produit est un accessoire------------//
