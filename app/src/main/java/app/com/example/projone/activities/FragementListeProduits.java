@@ -47,7 +47,7 @@ public class FragementListeProduits extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                     //placer le intent ici pour aller vers le detail
-                    Toast.makeText(view.getContext(), "fonctionne", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(view.getContext(), "fonctionne", Toast.LENGTH_SHORT).show();
                 }
             });
         }

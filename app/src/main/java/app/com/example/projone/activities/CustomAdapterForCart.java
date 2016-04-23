@@ -74,7 +74,7 @@ public class CustomAdapterForCart extends BaseAdapter {
         imageView.setImageResource(produitList.get(position).getPhoto());
         textViewpanier2.setText("Marque: " + produitList.get(position).getMarque());
         textViewpanier4.setText("Prix U: " + (produitList.get(position).getPrix()));
-        textViewpanierqtte.setText("Quantite= "+ 1);
+        textViewpanierqtte.setText("Quantite:        "+ 1);
 
 
         ImageButton button = (ImageButton) convertView.findViewById(R.id.button3);
@@ -82,7 +82,7 @@ public class CustomAdapterForCart extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(v.getContext(), "panierSuppButton position :  " + position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "L'element est retire du panier", Toast.LENGTH_SHORT).show();
                 produitList.remove(position);
                 notifyDataSetChanged();
 
@@ -116,7 +116,7 @@ public class CustomAdapterForCart extends BaseAdapter {
         {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                textViewpanierqtte.setText(""+newVal);
+                textViewpanierqtte.setText("Quantite:        "+newVal);
                 notifyDataSetChanged();
 
             }

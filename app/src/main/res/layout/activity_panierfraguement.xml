@@ -9,12 +9,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="app.com.example.projone.activities.panierfraguement">
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listViewPanier"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/gridViewPanier"
+        android:columnWidth="90dp"
+        android:numColumns="1"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:gravity="center"
+        />
 
 </RelativeLayout>
