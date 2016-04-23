@@ -18,6 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="app.com.example.projone.activities.Panier_activity" />
+        <activity android:name="app.com.example.projone.activities.ListeProduitsActivity"/>
+        <activity android:name="app.com.example.projone.activities.DetailProduitActivite"></activity>
     </application>
 
 </manifest>

@@ -111,6 +111,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (id == R.id.action_cart) {
             //TODO: Intent vers Panier ici.
+            List<Produit> produitList = new ArrayList<>();
+            produitList.add(new Produit(R.drawable.ic_italie_paul_et_shark_homme_polos_meilleur_prix_1016,"polo",100));
+
+            produitList.add(new Produit(R.drawable.ic_2013_fashion_mens_stripe_paul_shark_short_polo_shirt_red_grey_black_lrg,"Ralph",200));
+
+            produitList.add(new Produit(R.drawable.ic__32,"Tommy",300));
+
+            produitList.add(new Produit(R.drawable.ic_corec1p11104sfi010_1x,"triicoo",400));
+
+            produitList.add(new Produit(R.drawable.ic_fashion_paul_and_shark_long_sleeved_shirts_best_price_453, "geek", 500));
+
+            produitList.add(new Produit(R.drawable.ic_img_thing, "paul&shark", 500));
+
+            produitList.add(new Produit(R.drawable.ic_nyp0902224_sale_stripes_paul_shark_homme_short_polo_shirt_yellow_boutique_vente, "mongo", 500));
+
+            produitList.add(new Produit(R.drawable.ic__32,"celio",300));
+
+            Intent intent = new Intent(this ,Panier_activity.class);
+            intent.putExtra("listp", (ArrayList<Produit>) produitList);
+
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -197,10 +218,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (adapter.getCategorie().getSousCategories().get(position).getSousCategories().isEmpty()) {
-                        Intent intent ; //TODO: Create intent here with the product list activity
+                         //TODO: Create intent here with the product list activity
                         //TODO: Send to products activity
-                        ArrayList<Produit> produits = new ArrayList<Produit>();
                         //TODO:Copy product list here.
+                        List<Produit> produitList = new ArrayList<>();
+                        produitList.add(new Produit(R.drawable.ic_italie_paul_et_shark_homme_polos_meilleur_prix_1016,"polo",100));
+
+                        produitList.add(new Produit(R.drawable.ic_2013_fashion_mens_stripe_paul_shark_short_polo_shirt_red_grey_black_lrg,"Ralph",200));
+
+                        produitList.add(new Produit(R.drawable.ic__32,"Tommy",300));
+
+                        produitList.add(new Produit(R.drawable.ic_corec1p11104sfi010_1x,"triicoo",400));
+
+                        produitList.add(new Produit(R.drawable.ic_fashion_paul_and_shark_long_sleeved_shirts_best_price_453, "geek", 500));
+
+                        produitList.add(new Produit(R.drawable.ic_img_thing, "paul&shark", 500));
+
+                        produitList.add(new Produit(R.drawable.ic_nyp0902224_sale_stripes_paul_shark_homme_short_polo_shirt_yellow_boutique_vente, "mongo", 500));
+
+                        produitList.add(new Produit(R.drawable.ic__32,"celio",300));
+
+                        Intent intent = new Intent(getActivity() ,ListeProduitsActivity.class);
+                        intent.putExtra("listp", (ArrayList<Produit>) produitList);
+
+                        startActivity(intent);
                     } else {
                         adapter.setCategorie(adapter.getCategorie().getSousCategories().get(position));
                     }

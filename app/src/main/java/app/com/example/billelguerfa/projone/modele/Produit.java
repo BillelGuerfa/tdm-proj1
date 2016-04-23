@@ -1,6 +1,7 @@
 package app.com.example.billelguerfa.projone.modele;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,82 @@ public class Produit implements Serializable{
     private String couleur;
     private String marque;
     private String reference;
+    private float prix;
+    private List<String> couleurs= new ArrayList<String>();
+    private List<String> tailles = new ArrayList<String>();
+    private String tailleChoisie;
+    private String couleurChoisie;
+    private Categorie categorie;
 
+    public Produit(String nom, String marque, String reference, List<String> taille,List<String> couleurs) {
+        this.nom = nom;
+        this.marque = marque;
+        this.reference = reference;
+        this.couleurs=couleurs;
+        this.tailles=taille;
+
+    }
+    public List<String> getCouleurs() {
+        return couleurs;
+    }
+
+    public void setCouleurs(List<String> couleurs) {
+        this.couleurs = couleurs;
+    }
+
+    public List<String> getTailles() {
+        return tailles;
+    }
+
+    public String getTailleChoisie() {
+        return tailleChoisie;
+    }
+
+    public void setTailleChoisie(String tailleChoisie) {
+        this.tailleChoisie = tailleChoisie;
+    }
+
+    public String getCouleurChoisie() {
+        return couleurChoisie;
+    }
+
+    public void setCouleurChoisie(String couleurChoisie) {
+        this.couleurChoisie = couleurChoisie;
+    }
+
+    public void setTailles(List<String> tailles) {
+        this.tailles = tailles;
+    }
+
+    public Categorie getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(Categorie categorie) {
+        this.categorie = categorie;
+    }
+
+    public Produit(int photo, String nom, float prix) {
+        this.photo = photo;
+        this.nom = nom;
+        this.prix = prix;
+    }
+
+    public int getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(int photo) {
+        this.photo = photo;
+    }
+
+    public float getPrix() {
+        return prix;
+    }
+
+    public void setPrix(float prix) {
+        this.prix = prix;
+    }
 
 
     public Produit(String nom, String couleur, String marque, String reference, String taille, int longeur) {
