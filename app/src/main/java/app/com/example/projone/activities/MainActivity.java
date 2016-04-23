@@ -2,8 +2,12 @@ package app.com.example.projone.activities;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -35,7 +39,7 @@ import app.com.example.billelguerfa.projone.modele.Categorie;
 import app.com.example.billelguerfa.projone.modele.Produit;
 import app.com.example.projone.adapters.CategoriesAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private List<Categorie> categories;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -59,6 +63,15 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         //TODO: Fix this later.
         this.categories = new ArrayList<Categorie>();
@@ -100,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         haut.getSousCategories().add(new Categorie(false,"Chemises"));
         haut.getSousCategories().add(new Categorie(false,"T-Shirt"));
         haut.getSousCategories().add(new Categorie(false,"Vestes"));
-        haut.getSousCategories().add(new Categorie(false,""));
         bas.getSousCategories().add(new Categorie(false,"Pantalons"));
 
         femme.getSousCategories().add(hautFemmes);
@@ -109,7 +121,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        basFemmes.getSousCategories().add(new Categorie(false,"Jupes"));
+        basFemmes.getSousCategories().add(new Categorie(false, "Jupes"));
+
+
+
+
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -149,6 +165,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+         if(id == R.id.notifications) {
+            if(item.getTitle().equals(getResources().getString(R.string.notifications_active))){
+                item.setTitle(getResources().getString(R.string.notifications_off));
+                item.setIcon(R.drawable.ic_notifications_off_black_24dp);
+            }
+            else {
+                item.setTitle(getResources().getString(R.string.notifications_active));
+                item.setIcon(R.drawable.ic_notifications_active_black_24dp);
+            }
+        }
+
+
+        return true;
     }
 
     /**
