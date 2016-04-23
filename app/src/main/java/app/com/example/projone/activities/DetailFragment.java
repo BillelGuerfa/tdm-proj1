@@ -3,6 +3,7 @@ package app.com.example.projone.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -45,7 +46,7 @@ public class DetailFragment extends android.app.Fragment {
         l.add("34");
         l.add("36");
         List<String> L1=new ArrayList<>();
-        L1.add("xxxc");
+        L1.add("orange");
         L1.add("bleu");
         L1.add("vert");
 
@@ -59,12 +60,16 @@ public class DetailFragment extends android.app.Fragment {
             TextView textDescription=(TextView) view.findViewById(R.id.textDescription);
             TextView textContenu=(TextView) view.findViewById(R.id.textContenu);
             Spinner spinTaille=(Spinner) view.findViewById(R.id.spinTaille);
-            EditText editQuantite=(EditText) view.findViewById(R.id.editQuantite);
             Spinner spinCouleur=(Spinner) view.findViewById(R.id.spinCouleur);
             Button ajouterPanier=(Button) view.findViewById(R.id.bouttonAjouter);
             LinearLayout layoutTaille = (LinearLayout) view.findViewById(R.id.layoutTaille);
             LinearLayout layoutCouleur=(LinearLayout) view.findViewById(R.id.layoutCouleur);
+            TextView textSuggestion=(TextView) view.findViewById(R.id.textSuggestion) ;
+            /*ImageView suggestion1=(ImageView) view.findViewById(R.id.suggestion1);
+            ImageView suggestion2=(ImageView) view.findViewById(R.id.suggestion1);
+            ImageView suggestion3=(ImageView) view.findViewById(R.id.suggestion1);*/
 
+            textSuggestion.setText(getResources().getString(R.string.textSuggestion));
             textNom.setText(produit.getNom());
             //textPrix.setText(produit.getPrix());
            // textContenu.setText(produit.getDescription());

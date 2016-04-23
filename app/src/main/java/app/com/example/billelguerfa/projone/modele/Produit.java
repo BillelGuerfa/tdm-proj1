@@ -105,19 +105,36 @@ public class Produit implements Serializable {
     private List<String> tailles = new ArrayList<String>();
     private String couleurChoisie;
     private Categorie categorie;
+    private int note;
+    private int prix;
+    private String description;
 
 
 
 
 
-    public Produit(String nom, String couleur, String marque, String reference, List<String> taille,List<String> couleurs,Categorie categorie) {
+    public Produit(String nom, String marque, String reference, List<String> taille,List<String> couleurs,Categorie categorie,int note,int photo,int prix,String description) {
         this.nom = nom;
-        this.couleurChoisie = couleur;
         this.marque = marque;
         this.reference = reference;
-        this.tailles = taille;
         this.categorie = categorie;
         this.couleurs=couleurs;
+        this.tailles=taille;
+        this.note=note;
+        this.photo=photo;
+        this.prix=prix;
+        this.description = description;
+
+    }
+
+    public Produit(String nom, String marque, String reference, List<String> taille,List<String> couleurs) {
+        this.nom = nom;
+        this.marque = marque;
+        this.reference = reference;
+        this.categorie = categorie;
+        this.couleurs=couleurs;
+        this.tailles=taille;
+
     }
 
     public String getNom() {
@@ -178,5 +195,39 @@ public class Produit implements Serializable {
     public Categorie getCategorie() {
         return categorie;
     }
+
+    public int getNote() {
+        return note;
+    }
+
+    public void setNote(int note) {
+        this.note = note;
+    }
+
+    public int getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(int photo) {
+        this.photo = photo;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getPrix() {
+        return prix;
+    }
+
+    public void setPrix(int prix) {
+        this.prix = prix;
+    }
+
     // private List<Categorie> categories;
 }
