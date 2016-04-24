@@ -32,6 +32,11 @@ import app.com.example.billelguerfa.projone.modele.Produit;
 
 public class DetailFragment extends android.app.Fragment {
     Produit produit;
+    Produit produit1;
+    Produit produit2;
+    Produit produit3;
+    Produit produit4;
+    Produit produit5;
     Panier panier;
     @Nullable
     @Override
@@ -45,12 +50,30 @@ public class DetailFragment extends android.app.Fragment {
         l.add("32");
         l.add("34");
         l.add("36");
-        List<String> L1=new ArrayList<>();
-        L1.add("orange");
-        L1.add("bleu");
-        L1.add("vert");
+        l.add("38");
+        l.add("40");
+        l.add("42");
 
-        produit= new Produit("shirt levis marque celioqsdd sdfsq dsqf  sdf ds q sqd","celio","2132156",l,L1);
+        List<String> l2=new ArrayList<>();
+        l2.add("W32-H34");
+        l2.add("W34-H34");
+        l2.add("W36-H38");
+        l2.add("W38-H36");
+        l2.add("W40-H40");
+        l2.add("W42-H42");
+
+        List<String> L1=new ArrayList<>();
+        /*L1.add("orange");
+        L1.add("bleu");
+        L1.add("vert");*/
+
+        produit= new Produit("Levis - Jean - Homme - 511 Slim Fit - Green Splash - Brut","Levis","2132156",l2,L1,R.drawable.ic_levis_jean_homme_511_slim,2500,"Jean pour hommesLevi's 511 Slim Fit Couleur Brut bleu vert délavé (Green Splash)Leger délavage patiné aux jambesCoupe droite ajustée (Slim fit), resserré en bas (Slighty tapered leg)Taille basse (Sits below waist)Braguette zippée éclair﻿5 poches dont une petite gousset apparente devant à droite Composition : 100% Coton");
+        produit2= new Produit("Diesel Industry Krooley","Diesel","213656",l2,R.drawable.ic_diesel_jean,2500,"Jean pour hommesLevi's 511 Slim Fit Couleur Brut bleu vert délavé (Green Splash)Leger délavage patiné aux jambesCoupe droite ajustée (Slim fit), resserré en bas (Slighty tapered leg)Taille basse (Sits below waist)Braguette zippée éclair﻿5 poches dont une petite gousset apparente devant à droite Composition : 100% Coton");
+
+
+
+
+
         if (bundle!=null) {
             ImageView coverImage = (ImageView) view.findViewById(R.id.coverImage);
             TextView textNom= (TextView) view.findViewById(R.id.textNom);
@@ -71,9 +94,9 @@ public class DetailFragment extends android.app.Fragment {
 
             textSuggestion.setText(getResources().getString(R.string.textSuggestion));
             textNom.setText(produit.getNom());
-            //textPrix.setText(produit.getPrix());
-           // textContenu.setText(produit.getDescription());
-            //coverImage.setImageResource(produit.getPhoto());
+            textPrix.setText("2500"+getResources().getString(R.string.textDeviseAlgerien));
+           textContenu.setText(produit.getDescription());
+            coverImage.setImageResource(produit.getPhoto());
 
             //-----------changer le texte taille par text pointure si c des chaussures-----------------//
 /*            if (produit.getCategorie().getNom().equals("Chaussures"))

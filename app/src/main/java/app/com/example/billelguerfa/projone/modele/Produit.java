@@ -113,14 +113,62 @@ public class Produit implements Serializable {
 
 
 
-    public Produit(String nom, String marque, String reference, List<String> taille,List<String> couleurs,Categorie categorie,int note,int photo,int prix,String description) {
+    public Produit(String nom, String marque, String reference, List<String> taille,List<String> couleurs,Categorie categorie,int photo,int prix,String description) {
         this.nom = nom;
         this.marque = marque;
         this.reference = reference;
         this.categorie = categorie;
         this.couleurs=couleurs;
         this.tailles=taille;
-        this.note=note;
+        this.photo=photo;
+        this.prix=prix;
+        this.description = description;
+
+    }
+
+    public Produit(String nom, String marque, String reference, List<String> taille,List<String> couleurs,int photo,int prix,String description) {
+        this.nom = nom;
+        this.marque = marque;
+        this.reference = reference;
+        this.couleurs=couleurs;
+        this.tailles=taille;
+        this.photo=photo;
+        this.prix=prix;
+        this.description = description;
+
+    }
+
+
+    public Produit(String nom, String marque, String reference, List<String> taille,Categorie categorie,int photo,int prix,String description) {
+        this.nom = nom;
+        this.marque = marque;
+        this.reference = reference;
+        this.categorie = categorie;
+        this.tailles=taille;
+        this.photo=photo;
+        this.prix=prix;
+        this.description = description;
+
+    }
+
+    public Produit(String nom, String marque, String reference, List<String> taille,int photo,int prix,String description) {
+        this.nom = nom;
+        this.marque = marque;
+        this.reference = reference;
+        this.categorie = categorie;
+        this.tailles=taille;
+        this.photo=photo;
+        this.prix=prix;
+        this.description = description;
+
+    }
+
+    public Produit(String nom, String marque, String reference,Categorie categorie,int photo,int prix,String description) {
+        this.nom = nom;
+        this.marque = marque;
+        this.reference = reference;
+        this.categorie = categorie;
+        this.couleurs=couleurs;
         this.photo=photo;
         this.prix=prix;
         this.description = description;

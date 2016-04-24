@@ -35,7 +35,6 @@
                     android:id="@+id/layoutImage">
 
                     <ImageView
-                        android:src="@drawable/ic_agilecovrer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/coverImage"
@@ -124,7 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/layoutCouleur"
-                    android:layout_below="@id/textNom"
+                    android:layout_below="@id/layoutPrix"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     >
@@ -214,13 +213,13 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:id="@+id/suggestion1"
-                        android:src="@drawable/ic_agile"
+                        android:src="@drawable/ic_jean_jack_and_jones"
                         android:layout_weight="1"/>
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:id="@+id/suggestion2"
-                        android:src="@drawable/ic_androidfd"
+                        android:src="@drawable/ic_jean_slim"
                         android:layout_weight="1"
                         />
                     <ImageView
@@ -228,9 +227,8 @@
                         android:layout_height="match_parent"
                         android:id="@+id/suggestion3"
                         android:layout_weight="1"
-                        android:src="@drawable/ic_objectivec"
+                        android:src="@drawable/ic_diesel_jean"
                         />
-
                 </LinearLayout>
 
             </RelativeLayout>
