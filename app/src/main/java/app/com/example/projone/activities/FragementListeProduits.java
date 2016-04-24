@@ -21,7 +21,7 @@ import app.com.example.billelguerfa.projone.modele.Produit;
 
 
 public class FragementListeProduits extends Fragment {
-
+    List<Produit> listp;
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -39,7 +39,7 @@ public class FragementListeProduits extends Fragment {
 
         if(bundle != null)
         {
-            List<Produit> listp =  (List<Produit>)bundle.get("prodlist");
+             listp =  (List<Produit>)bundle.get("prodlist");
 
             gridView.setAdapter(new CustomAdapterForListeProduits(getActivity(), listp));
 
@@ -50,6 +50,7 @@ public class FragementListeProduits extends Fragment {
                     //placer le intent ici pour aller vers le detail
                     //TODO:Go to detail activity here
                     Intent intent = new Intent(getActivity(),DetailProduitActivite.class);
+                    intent.putExtra("produit",listp.get(position));
                     startActivity(intent);
                     Toast.makeText(view.getContext(), "fonctionne", Toast.LENGTH_SHORT).show();
                 }

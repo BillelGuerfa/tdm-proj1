@@ -19,6 +19,15 @@ public class Produit implements Serializable{
     private String tailleChoisie;
     private String couleurChoisie;
     private Categorie categorie;
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Produit(String nom, String marque, String reference, List<String> taille,List<String> couleurs) {
         this.nom = nom;
@@ -26,6 +35,37 @@ public class Produit implements Serializable{
         this.reference = reference;
         this.couleurs=couleurs;
         this.tailles=taille;
+
+    }
+    public Produit(String nom, String marque, List<String> taille,int photo,int prix) {
+        this.nom = nom;
+        this.marque = marque;
+        this.tailles=taille;
+        this.photo=photo;
+        this.description = "Quam ob rem ut ii qui superiores sunt submittere se debent in amicitia, sic quodam modo inferiores extollere. Sunt enim quidam qui molestas amicitias faciunt, cum ipsi se contemni putant; quod non fere contingit nisi iis qui etiam contemnendos se arbitrantur; qui hac opinione non modo verbis sed etiam opere levandi sunt.";
+        this.prix=prix;
+        this.categorie=categorie;
+
+    }
+
+    public Produit(String nom, String marque, List<String> taille,List<String> couleurs,int photo,int prix) {
+        this.nom = nom;
+        this.marque = marque;
+        this.tailles=taille;
+        this.photo=photo;
+        this.couleurs=couleurs;
+        this.description = "Quam ob rem ut ii qui superiores sunt submittere se debent in amicitia, sic quodam modo inferiores extollere. Sunt enim quidam qui molestas amicitias faciunt, cum ipsi se contemni putant; quod non fere contingit nisi iis qui etiam contemnendos se arbitrantur; qui hac opinione non modo verbis sed etiam opere levandi sunt.";
+        this.prix=prix;
+        this.categorie=categorie;
+
+    }
+    public Produit(String nom, String marque,int photo,int prix) {
+        this.nom = nom;
+        this.marque = marque;
+        this.photo=photo;
+        this.description = "Quam ob rem ut ii qui superiores sunt submittere se debent in amicitia, sic quodam modo inferiores extollere. Sunt enim quidam qui molestas amicitias faciunt, cum ipsi se contemni putant; quod non fere contingit nisi iis qui etiam contemnendos se arbitrantur; qui hac opinione non modo verbis sed etiam opere levandi sunt.";
+        this.prix=prix;
+        this.categorie=categorie;
 
     }
     public List<String> getCouleurs() {

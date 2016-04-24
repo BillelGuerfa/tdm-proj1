@@ -38,7 +38,7 @@ public class DetailFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, null);
         Bundle bundle = getArguments();
-       // produit= (Produit) bundle.getSerializable("produit");
+        produit= (Produit) bundle.getSerializable("produit");
         //panier=(Panier) bundle.getSerializable("panier");
 
         List<String> l=new ArrayList<>();
@@ -50,7 +50,7 @@ public class DetailFragment extends android.app.Fragment {
         L1.add("bleu");
         L1.add("vert");
 
-        produit= new Produit("shirt levis marque celioqsdd sdfsq dsqf  sdf ds q sqd","celio","2132156",l,L1);
+        produit= (Produit) bundle.getSerializable("produit");
         if (bundle!=null) {
             ImageView coverImage = (ImageView) view.findViewById(R.id.coverImage);
             TextView textNom= (TextView) view.findViewById(R.id.textNom);
@@ -71,16 +71,16 @@ public class DetailFragment extends android.app.Fragment {
 
             textSuggestion.setText(getResources().getString(R.string.textSuggestion));
             textNom.setText(produit.getNom());
-            //textPrix.setText(produit.getPrix());
-           // textContenu.setText(produit.getDescription());
-            //coverImage.setImageResource(produit.getPhoto());
+            textPrix.setText(""+produit.getPrix()+getResources().getString(R.string.textDeviseAlgerien));
+            textContenu.setText(produit.getDescription());
+            coverImage.setImageResource(produit.getPhoto());
 
             //-----------changer le texte taille par text pointure si c des chaussures-----------------//
-/*            if (produit.getCategorie().getNom().equals("Chaussures"))
+           if (produit.getCategorie().getNom().equals("Chaussures"))
             {
                 textTaille.setText(getResources().getString(R.string.textPointure));
             }
-*/
+
             ///-------------------------------------------------------------------------------------/////////
 
             ////----------------- cacher la layout de taille si le produit est un accessoire------------//

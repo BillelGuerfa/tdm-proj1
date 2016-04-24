@@ -33,7 +33,11 @@ public class Categorie implements Serializable{
     }
 
     public void setProduits(List<Produit> produits) {
+
         this.produits = produits;
+        for(int i=0;i<produits.size();i++){
+            this.produits.get(i).setCategorie(this);
+        }
     }
 
     public int getIcon() {

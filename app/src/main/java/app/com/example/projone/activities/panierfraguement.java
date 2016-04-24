@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ public class panierfraguement extends Fragment {
         // create vue
         View view = inflater.inflate(R.layout.activity_panierfraguement,null);
         //appeler la listeView
-        ListView listView = (ListView) view.findViewById(R.id.listViewPanier);
+        GridView gridView = (GridView) view.findViewById(R.id.gridViewPanier);
         //crée et remplir la liste
         /////listView.setAdapter(new CustomAdapterForListeProduits(getActivity(), list ));
         ///////////listView.setOnItemClickListener();
@@ -43,9 +44,9 @@ public class panierfraguement extends Fragment {
 
 
 
-            listView.setAdapter(new CustomAdapterForCart(getActivity(), listp));
+            gridView.setAdapter(new CustomAdapterForCart(getActivity(), listp));
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 

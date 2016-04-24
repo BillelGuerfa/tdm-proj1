@@ -19,8 +19,9 @@
             </intent-filter>
         </activity>
         <activity android:name="app.com.example.projone.activities.Panier_activity" />
-        <activity android:name="app.com.example.projone.activities.ListeProduitsActivity"/>
-        <activity android:name="app.com.example.projone.activities.DetailProduitActivite"></activity>
+        <activity android:name="app.com.example.projone.activities.ListeProduitsActivity" />
+        <activity android:name="app.com.example.projone.activities.DetailProduitActivite" />
+        <activity android:name="app.com.example.projone.activities.CommandesActivity"></activity>
     </application>
 
 </manifest>

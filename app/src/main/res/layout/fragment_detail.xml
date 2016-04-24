@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/bouttonAjouter"
+        android:background="@color/colorPrimary"
         android:layout_alignParentBottom="true"
         android:text="@string/ajoutePanier"
         />
@@ -27,7 +28,6 @@
             tools:context="dz.esi.activities.DetailActivity">
 
             <ImageView
-                android:src="@drawable/ic_agilecovrer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/coverImage"
@@ -190,13 +190,13 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:id="@+id/suggestion1"
-                    android:src="@drawable/ic_agile"
+                    android:src="@drawable/ic_jean_jack_and_jones"
                     android:layout_weight="1"/>
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:id="@+id/suggestion2"
-                    android:src="@drawable/ic_androidfdcover"
+                    android:src="@drawable/ic_jean_slim"
                     android:layout_weight="1"
                     />
                 <ImageView
@@ -204,7 +204,7 @@
                     android:layout_height="match_parent"
                     android:id="@+id/suggestion3"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_objectivecover"
+                    android:src="@drawable/ic_diesel_jean"
                     />
             </LinearLayout>
 

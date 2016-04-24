@@ -18,7 +18,7 @@ public class DetailProduitActivite extends AppCompatActivity {
         Toast.makeText(DetailProduitActivite.this, "sqkldqskld", Toast.LENGTH_SHORT).show();
         Intent intent = getIntent();
         Bundle bundle = new Bundle();
-        //bundle.putSerializable("produit",intent.getSerializableExtra("produit"));
+        bundle.putSerializable("produit",intent.getSerializableExtra("produit"));
         detailFragment.setArguments(bundle);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.frameLayout, detailFragment);

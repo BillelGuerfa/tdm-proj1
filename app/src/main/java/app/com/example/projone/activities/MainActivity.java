@@ -1,5 +1,7 @@
 package app.com.example.projone.activities;
 
+import android.support.v7.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
@@ -42,6 +44,10 @@ import app.com.example.projone.adapters.CategoriesAdapter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Categorie categorie;
+    List<String> Lcouleur=new ArrayList<>();
+    List<String> Lenfant=new ArrayList<>();
+    List<String> Lhomme=new ArrayList<>();
+    List<String> l2=new ArrayList<>();
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -172,7 +178,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 item.setTitle(getResources().getString(R.string.notifications_active));
                 item.setIcon(R.drawable.ic_notifications_active_black_24dp);
             }
-        }
+        }else if(id == R.id.nav_login){
+             this.showLoginDialog();
+         }
+         else if(id == R.id.nav_suivi){
+
+             Intent intent = new Intent(this,CommandesActivity.class);
+             startActivity(intent);
+         }
+
 
 
         return true;
@@ -221,25 +235,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                          //TODO: Create intent here with the product list activity
                         //TODO: Send to products activity
                         //TODO:Copy product list here.
-                        List<Produit> produitList = new ArrayList<>();
-                        produitList.add(new Produit(R.drawable.ic_italie_paul_et_shark_homme_polos_meilleur_prix_1016,"polo",100));
 
-                        produitList.add(new Produit(R.drawable.ic_2013_fashion_mens_stripe_paul_shark_short_polo_shirt_red_grey_black_lrg,"Ralph",200));
-
-                        produitList.add(new Produit(R.drawable.ic__32,"Tommy",300));
-
-                        produitList.add(new Produit(R.drawable.ic_corec1p11104sfi010_1x,"triicoo",400));
-
-                        produitList.add(new Produit(R.drawable.ic_fashion_paul_and_shark_long_sleeved_shirts_best_price_453, "geek", 500));
-
-                        produitList.add(new Produit(R.drawable.ic_img_thing, "paul&shark", 500));
-
-                        produitList.add(new Produit(R.drawable.ic_nyp0902224_sale_stripes_paul_shark_homme_short_polo_shirt_yellow_boutique_vente, "mongo", 500));
-
-                        produitList.add(new Produit(R.drawable.ic__32,"celio",300));
 
                         Intent intent = new Intent(getActivity() ,ListeProduitsActivity.class);
-                        intent.putExtra("listp", (ArrayList<Produit>) produitList);
+                        intent.putExtra("listp", (ArrayList<Produit>)adapter.getCategorie().getSousCategories().get(position).getProduits());
 
                         startActivity(intent);
                     } else {
@@ -302,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Categorie chaussures = new Categorie(homme,"Chaussures");
         chaussures.setIcon(R.drawable.ic_chaussureshomme);
+        chaussures.setProduits(this.creerChaussureHomme());
 
         Categorie costumes = new Categorie(homme,"Costumes");
         costumes.setIcon(R.drawable.ic_costumes);
@@ -321,6 +321,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         homme.getSousCategories().add(haut);
         homme.getSousCategories().add(bas);
         homme.getSousCategories().add(chaussures);
+        homme.getSousCategories().add(costumes);
         homme.getSousCategories().add(accessoires);
 
         Categorie chemises = new Categorie(haut, "Chemises");
@@ -334,6 +335,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         haut.getSousCategories().add(vestes);
         Categorie pantalons = new Categorie(bas,"Pantalons");
         pantalons.setIcon(R.drawable.ic_bas);
+        pantalons.setProduits(this.creerJeanHomme());
         bas.getSousCategories().add(pantalons);
 
         femme.getSousCategories().add(hautFemmes);
@@ -349,10 +351,134 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Categorie chaussuresEnfants = new Categorie(enfant,"Chaussures");
         chaussuresEnfants.setIcon(R.drawable.ic_chaussuresenfant);
+        chaussuresFemme.setProduits(this.creerChaussureFemme());
 
         enfant.getSousCategories().add(hautEnfants);
+        basEnfants.setProduits(this.creerJeanEnfant());
         enfant.getSousCategories().add(basEnfants);
         enfant.getSousCategories().add(chaussuresEnfants);
+        chaussuresEnfants.setProduits(this.creerChaussureEnfant());
 
+    }
+
+    private void showLoginDialog()
+    {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(R.layout.login) ;
+        builder.setTitle("Se connecter");
+        builder.setPositiveButton("connecter", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        builder.setNegativeButton("Creer un compte", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.show();
+    }
+
+    private void createTailles(){
+        Lenfant.add("28");
+        Lenfant.add("28.5");
+        Lenfant.add("29");
+        Lenfant.add("30");
+        Lenfant.add("30.5");
+        Lenfant.add("31");
+
+
+
+
+        Lhomme.add("40");
+        Lhomme.add("41");
+        Lhomme.add("42.5");
+        Lhomme.add("43");
+        Lhomme.add("43.5");
+        Lhomme.add("44");
+        Lhomme.add("45");
+
+
+        l2.add("W32-H34");
+        l2.add("W34-H34");
+        l2.add("W36-H38");
+        l2.add("W38-H36");
+        l2.add("W40-H40");
+        l2.add("W42-H42");
+
+
+        Lcouleur.add("orange");
+        Lcouleur.add("bleu");
+        Lcouleur.add("vert");
+        Lcouleur.add("noir");
+        Lcouleur.add("blanc");
+    }
+
+    public List<Produit> creerJeanHomme()
+    {
+        List<Produit> produits= new ArrayList<Produit>();
+        ////Jean Homme////
+        produits.add(new Produit("Levis - Jean - Homme - 511 Slim Fit - Green Splash - Brut","Levis",l2,R.drawable.ic_levis_jean_homme_511_slim,2500));
+        produits.add(new Produit("Diesel Industry Krooley","Diesel",l2,R.drawable.ic_diesel_jean,2500));
+        produits.add(new Produit("Levis Fit - Green Splash - Brut","Levis",l2,R.drawable.ic_levis_jean_homme_511_slim1,2700));
+        produits.add(new Produit("Jack and jones Fit - Slim - Brut","Jack And jones",l2,R.drawable.ic_jeans_slim,3500));
+        produits.add(new Produit("Jack and jones  -Fit - Brut","Levis",l2,R.drawable.ic_jean_jack_and_jones,2700));
+        produits.add(new Produit("Slim jean -Fit - daim  -Marron  ","Diesel",l2,R.drawable.ic_jean_slim,3800));
+
+        return produits;
+    }
+
+    public List<Produit> creerJeanEnfant()
+    {
+        List<Produit> produits= new ArrayList<Produit>();
+        //Jean enfant
+        produits.add(new Produit("Levis Fit - Green Splash - Brut","Levis",l2,R.drawable.ic_jean_enfant,2700));
+        produits.add(new Produit("Jack and jones Fit - Slim - Brut","Jack And jones",l2,R.drawable.ic_jean_enfant2,3500));
+        produits.add(new Produit("Jack and jones  -Fit - Brut","Levis",l2,R.drawable.ic_jean_enfant3,2700));
+        produits.add(new Produit("Slim jean -Fit - daim    ","Diesel",l2,R.drawable.ic_jean_enfant4,4000));
+        produits.add(new Produit("Slim jean -Fit - daim  -Marron  ","Levis",l2,R.drawable.ic_jean_enfant5,3800));
+        produits.add(new Produit("Slim jean -Fit - daim  -Marron  ","A",l2,R.drawable.ic_jean_enfant6,4700));
+
+        return produits;
+    }
+
+    public List<Produit> creerChaussureHomme()
+    {
+        List<Produit> produits= new ArrayList<Produit>();
+        //Chassure Homme
+        produits.add(new Produit("Chaussure adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_adidas_homme,7200));
+        produits.add(new Produit("Basket adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_adidas_homme1,7500));
+        produits.add(new Produit("Chaussure adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_adidas_homme4,9000));
+        produits.add(new Produit("Chaussure adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_adidas_baskets,8000));
+        produits.add(new Produit("Basket montante adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_adidas_originals,5500));
+
+        return produits;
+    }
+    public List<Produit> creerChaussureFemme()
+    {
+        List<Produit> produits= new ArrayList<Produit>();
+        //Chassure Femme
+        produits.add(new Produit("Chaussure Ballerines pour tous les jours  ","adidas",Lhomme,R.drawable.ic_ballerine_dune_6097207_2,7200));
+        produits.add(new Produit("Chaussure talons bas  ","Gucci",Lhomme,R.drawable.ic_zalando_2,7500));
+        produits.add(new Produit("Chaussure talon haut ","Gucci",Lhomme,R.drawable.ic_zalando_chaussure_4,9000));
+        produits.add(new Produit("Chaussure ballerine pour tous les jours ","adidas",Lhomme,R.drawable.ic_love_moschino_ballerines_noir,8000));
+        produits.add(new Produit("Chaussure pour tous les jours ","adidas",Lhomme,R.drawable.ic_soldes_zalando,5500));
+
+        return produits;
+    }
+    public List<Produit> creerChaussureEnfant()
+    {
+        List<Produit> produits= new ArrayList<Produit>();
+        //Chassure Enfant
+        produits.add(new Produit("Basket  style sport ", "adidas",Lhomme,R.drawable.ic_chaussure_enfant1, 7200));
+        produits.add(new Produit("Chaussure style classique ", "adidas",Lhomme,R.drawable.ic_chassure_enfant3, 7500));
+        produits.add(new Produit("Chaussure style sport ", "adidas", Lhomme, R.drawable.ic_chaussure_enfant2, 9000));
+        produits.add(new Produit("Basket adidas  orignials style sport ", "adidas", Lhomme, R.drawable.ic_chaussures_enfant,8000));
+        produits.add(new Produit("Basket adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_chaussure_enfant4,5500));
+
+        return produits;
     }
 }

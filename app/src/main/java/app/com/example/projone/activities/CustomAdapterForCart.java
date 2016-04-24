@@ -82,7 +82,7 @@ public class CustomAdapterForCart extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(v.getContext(), "panierSuppButton position :  " + position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "Produit retiré du panier.", Toast.LENGTH_SHORT).show();
                 produitList.remove(position);
                 notifyDataSetChanged();
 

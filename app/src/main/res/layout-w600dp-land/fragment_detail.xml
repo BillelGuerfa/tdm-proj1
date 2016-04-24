@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
-
-
-
-
-
-
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,6 +21,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/bouttonAjouter"
                     android:layout_alignParentBottom="true"
+                    android:background="@color/colorPrimary"
                     android:text="@string/ajoutePanier"
                     android:layout_weight="0"
                     />
@@ -43,7 +35,6 @@
                     android:id="@+id/layoutImage">
 
                     <ImageView
-                        android:src="@drawable/ic_agilecovrer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/coverImage"
@@ -132,7 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/layoutCouleur"
-                    android:layout_below="@id/textNom"
+                    android:layout_below="@id/layoutPrix"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     >
@@ -218,26 +209,33 @@
                     android:layout_below="@id/textSuggestion"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:id="@+id/suggestion1"
-                        android:src="@drawable/ic_agile"
-                        android:layout_weight="1"/>
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:id="@+id/suggestion2"
-                        android:src="@drawable/ic_androidfdcover"
-                        android:layout_weight="1"
-                        />
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:id="@+id/suggestion3"
-                        android:layout_weight="1"
-                        android:src="@drawable/ic_objectivecover"
-                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textSuggestion"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/suggestion1"
+                            android:src="@drawable/ic_jean_jack_and_jones"
+                            android:layout_weight="1"/>
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/suggestion2"
+                            android:src="@drawable/ic_jean_slim"
+                            android:layout_weight="1"
+                            />
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/suggestion3"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_diesel_jean"
+                            />
+                    </LinearLayout>
 
                 </LinearLayout>
 
