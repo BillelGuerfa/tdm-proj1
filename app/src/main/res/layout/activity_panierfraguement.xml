@@ -8,21 +8,34 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="app.com.example.projone.activities.panierfraguement">
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/total"
-        android:layout_alignParentBottom="true"
-        android:fontFamily="sans-serif-medium"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorGreen"
-        android:background="@color/colorGray"
-        android:text="Total : 5000 DA"
-        />
+        android:orientation="horizontal"
+        android:id="@+id/layoutTotal"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:id="@+id/total"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorGreen"
+            android:background="@color/colorGray"
+            android:text="Total : 5000 DA"
+            />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Valider Panier"
+            />
+    </LinearLayout>
+
     <GridView
-        android:layout_above="@id/total"
+        android:layout_above="@id/layoutTotal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/gridViewPanier"

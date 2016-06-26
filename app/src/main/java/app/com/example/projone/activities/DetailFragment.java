@@ -141,7 +141,7 @@ public class DetailFragment extends android.app.Fragment {
             ajouterPanier.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    panier.ajouterProduit(produit);
+                    //panier.ajouterProduit(produit);
                 }
             });
 

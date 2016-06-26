@@ -1,5 +1,8 @@
 package app.com.example.projone.activities;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +22,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,21 +37,35 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import app.com.example.billelguerfa.projone.R;
 import app.com.example.billelguerfa.projone.modele.Categorie;
 import app.com.example.billelguerfa.projone.modele.Produit;
 import app.com.example.projone.adapters.CategoriesAdapter;
+import app.com.example.services.CategorieService;
+import app.com.example.services.ProduitService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Categorie categorie;
+    private CategorieService _categorieService = new CategorieService();
+    private ProduitService _produitService = new ProduitService();
     List<String> Lcouleur=new ArrayList<>();
     List<String> Lenfant=new ArrayList<>();
     List<String> Lhomme=new ArrayList<>();
     List<String> l2=new ArrayList<>();
+    private DatabaseReference mDatabase;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -57,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
+    private Context that = this;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -67,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -80,19 +100,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        this.createCategories(); //instancie les catégories
+        //this.createCategories(); //instancie les catégories
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Create the adapter that will return a fragment for each of the three
+                // primary sections of the activity.
+                categorie =  _categorieService.recupCategories(dataSnapshot,"root",null);
+                mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),categorie);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),this.categorie);
+                // Set up the ViewPager with the sections adapter.
+                mViewPager = (ViewPager) findViewById(R.id.container);
+                mViewPager.setAdapter(mSectionsPagerAdapter);
+
+                TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+                tabLayout.setupWithViewPager(mViewPager);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        this._categorieService.getCatgories(valueEventListener);
+
+        /*mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),categorie);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
+        tabLayout.setupWithViewPager(mViewPager);*/
 
     }
 
@@ -237,10 +276,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         //TODO:Copy product list here.
 
 
-                        Intent intent = new Intent(getActivity() ,ListeProduitsActivity.class);
-                        intent.putExtra("listp", (ArrayList<Produit>)adapter.getCategorie().getSousCategories().get(position).getProduits());
 
-                        startActivity(intent);
+                        ProduitService produitService = new ProduitService();
+                        produitService.getProduitsByCat(adapter.getCategorie().getSousCategories().get(position).getId(), new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Intent intent = new Intent(getActivity() ,ListeProduitsActivity.class);
+                                ArrayList<Produit> produits = new ArrayList<Produit>();
+                                for(DataSnapshot produit: dataSnapshot.getChildren()){
+                                    produits.add(produit.getValue(Produit.class));
+                                }
+                                intent.putExtra("listp", produits);
+                                if (!produits.isEmpty()) {
+
+                                    startActivity(intent);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
                     } else {
                         adapter.setCategorie(adapter.getCategorie().getSousCategories().get(position));
                     }
@@ -282,40 +341,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
     private void createCategories(){
-        this.categorie = new Categorie(null,"root");
-        Categorie homme = new Categorie(this.categorie,"Homme");
-        Categorie femme = new Categorie(this.categorie,"Femme");
-        Categorie enfant = new Categorie(this.categorie,"Enfant");
+        this.createTailles();
+        this.categorie = new Categorie(null,"root","root");
+        Categorie homme = new Categorie(this.categorie,"Homme","homme");
+        Categorie femme = new Categorie(this.categorie,"Femme","femme");
+        Categorie enfant = new Categorie(this.categorie,"Enfant","enfant");
         this.categorie.getSousCategories().add(homme);
         this.categorie.getSousCategories().add(femme);
         this.categorie.getSousCategories().add(enfant);
 
-        Categorie haut = new Categorie(homme,"Haut");
+        Categorie haut = new Categorie(homme,"Haut","hautHomme");
         haut.setIcon(R.drawable.ic_haut);
 
-        Categorie bas = new Categorie(homme,"Bas");
+        Categorie bas = new Categorie(homme,"Bas","basHomme");
         bas.setIcon(R.drawable.ic_bas);
 
-        Categorie accessoires = new Categorie(homme,"Accessoires");
+        Categorie accessoires = new Categorie(homme,"Accessoires","accessoiresHomme");
         accessoires.setIcon(R.drawable.ic_accessoires);
 
-        Categorie chaussures = new Categorie(homme,"Chaussures");
+        Categorie chaussures = new Categorie(homme,"Chaussures","chaussuresHomme");
         chaussures.setIcon(R.drawable.ic_chaussureshomme);
         chaussures.setProduits(this.creerChaussureHomme());
 
-        Categorie costumes = new Categorie(homme,"Costumes");
+        Categorie costumes = new Categorie(homme,"Costumes","costumesHomme");
         costumes.setIcon(R.drawable.ic_costumes);
 
-        Categorie hautFemmes = new Categorie(femme,"Haut");
+        Categorie hautFemmes = new Categorie(femme,"Haut","hautFemmes");
         hautFemmes.setIcon(R.drawable.ic_hautfemmes);
 
-        Categorie basFemmes = new Categorie(femme,"Bas");
+        Categorie basFemmes = new Categorie(femme,"Bas","basFemmes");
         basFemmes.setIcon(R.drawable.ic_basfemmes);
 
-        Categorie chaussuresFemme = new Categorie(femme,"Chaussures");
+        Categorie chaussuresFemme = new Categorie(femme,"Chaussures","chaussuresFemme");
         chaussuresFemme.setIcon(R.drawable.ic_chaussuresfemme);
 
-        Categorie accessoiresFemme = new Categorie(femme,"Accessoires");
+        Categorie accessoiresFemme = new Categorie(femme,"Accessoires","accessoiresFemme");
         accessoiresFemme.setIcon(R.drawable.ic_accessoiresfemme);
 
         homme.getSousCategories().add(haut);
@@ -324,32 +384,88 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         homme.getSousCategories().add(costumes);
         homme.getSousCategories().add(accessoires);
 
-        Categorie chemises = new Categorie(haut, "Chemises");
+        Categorie chemises = new Categorie(haut, "Chemises","chemisesHomme");
         chemises.setIcon(R.drawable.ic_chemise);
         haut.getSousCategories().add(chemises);
-        Categorie tshirt = new Categorie(haut,"T-Shirt");
+        Categorie tshirt = new Categorie(haut,"T-Shirt","tshirtHomme");
         tshirt.setIcon(R.drawable.ic_haut);
         haut.getSousCategories().add(tshirt);
-        Categorie vestes = new Categorie(haut,"Vestes");
+        Categorie vestes = new Categorie(haut,"Vestes","vestesHomme");
         vestes.setIcon(R.drawable.ic_vestes);
         haut.getSousCategories().add(vestes);
-        Categorie pantalons = new Categorie(bas,"Pantalons");
+        Categorie pantalons = new Categorie(bas,"Pantalons","pantalonsHomme");
         pantalons.setIcon(R.drawable.ic_bas);
         pantalons.setProduits(this.creerJeanHomme());
         bas.getSousCategories().add(pantalons);
+
+        Categorie chapeaux = new Categorie(accessoires,"Casquettes","chapeauxHomme");
+        chapeaux.setIcon(R.drawable.ic_casquettehommeicone2);
+        chapeaux.setProduits(this.creerCasquetteHomme());
+
+        Categorie lunettesHomme = new Categorie(accessoires,"Lunettes","lunettesHomme");
+        lunettesHomme.setIcon(R.drawable.ic_lunettehomme1icone);
+        lunettesHomme.setProduits(this.creerLunetteHomme());
+
+        Categorie centureHommes = new Categorie(accessoires,"Ceintures","centureHommes");
+        centureHommes.setIcon(R.drawable.ic_centurehomme1icone);
+        centureHommes.setProduits(this.creerCeintureHomme());
+
+        accessoires.getSousCategories().add(chapeaux);
+        accessoires.getSousCategories().add(lunettesHomme);
+        accessoires.getSousCategories().add(centureHommes);
+
+
+        Categorie jupesFemme = new Categorie(basFemmes,"Jupes","jupesFemme");
+        jupesFemme.setIcon(R.drawable.ic_jupefemmeicone);
+        jupesFemme.setProduits(this.creerJupeFemme());
+
+        Categorie pantalonsFemme = new Categorie(basFemmes,"Pantalons","pantalonsFemme");
+        pantalonsFemme.setIcon(R.drawable.ic_pantalonfemmeicone);
+        pantalonsFemme.setProduits(this.creerPantalonFemme());
+
+        basFemmes.getSousCategories().add(jupesFemme);
+        basFemmes.getSousCategories().add(pantalonsFemme);
 
         femme.getSousCategories().add(hautFemmes);
         femme.getSousCategories().add(basFemmes);
         femme.getSousCategories().add(chaussuresFemme);
         femme.getSousCategories().add(accessoiresFemme);
 
-        Categorie hautEnfants = new Categorie(enfant,"Haut");
+        Categorie chapeauxFemme = new Categorie(accessoiresFemme, "Chapeaux","chapeauxFemme");
+        chapeauxFemme.setIcon(R.drawable.ic_chapeau_fedora_femme);
+        chapeauxFemme.setProduits(this.creerChapeauFemme());
+
+        Categorie sacFemme = new Categorie(accessoiresFemme,"Sacs","sacFemme");
+        sacFemme.setIcon(R.drawable.ic_sacfemme4icone);
+        sacFemme.setProduits(this.creerSacfemme());
+
+        Categorie lunettesFemme = new Categorie(accessoiresFemme,"Lunettes","lunettesFemme");
+        lunettesFemme.setIcon(R.drawable.ic_lunettefemme1icone);
+        lunettesFemme.setProduits(this.creerLunetteFemme());
+
+        Categorie centureFemme = new Categorie(accessoiresFemme,"Ceintures","centureFemme");
+        centureFemme.setIcon(R.drawable.ic_ceinturefemme2icone);
+        centureFemme.setProduits(this.creerCeinturefemme());
+
+        Categorie baguesFemme = new Categorie(accessoiresFemme,"Bagues","baguesFemme");
+        baguesFemme.setIcon(R.drawable.ic_bague2icone);
+        baguesFemme.setProduits(this.creerBagueFemme());
+
+
+        accessoiresFemme.getSousCategories().add(chapeauxFemme);
+        accessoiresFemme.getSousCategories().add(sacFemme);
+        accessoiresFemme.getSousCategories().add(lunettesFemme);
+        accessoiresFemme.getSousCategories().add(centureFemme);
+        accessoiresFemme.getSousCategories().add(baguesFemme);
+
+
+        Categorie hautEnfants = new Categorie(enfant,"Haut","hautEnfants");
         hautEnfants.setIcon(R.drawable.ic_hautenfants);
 
-        Categorie basEnfants = new Categorie(enfant,"Bas");
+        Categorie basEnfants = new Categorie(enfant,"Bas","basEnfants");
         basEnfants.setIcon(R.drawable.ic_basenfants);
 
-        Categorie chaussuresEnfants = new Categorie(enfant,"Chaussures");
+        Categorie chaussuresEnfants = new Categorie(enfant,"Chaussures","chaussuresEnfants");
         chaussuresEnfants.setIcon(R.drawable.ic_chaussuresenfant);
         chaussuresFemme.setProduits(this.creerChaussureFemme());
 
@@ -359,6 +475,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         enfant.getSousCategories().add(chaussuresEnfants);
         chaussuresEnfants.setProduits(this.creerChaussureEnfant());
 
+        //insererCategorie(this.categorie);
+        //constructMapCat(this.categorie);
+        insertProduitsbyCat(this.categorie);
     }
 
     private void showLoginDialog()
@@ -449,11 +568,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         List<Produit> produits= new ArrayList<Produit>();
         //Chassure Homme
-        produits.add(new Produit("Chaussure adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_adidas_homme,7200));
-        produits.add(new Produit("Basket adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_adidas_homme1,7500));
-        produits.add(new Produit("Chaussure adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_adidas_homme4,9000));
-        produits.add(new Produit("Chaussure adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_adidas_baskets,8000));
-        produits.add(new Produit("Basket montante adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_adidas_originals,5500));
+        produits.add(new Produit("Chaussure adidas  orignials style sport ","adidas",Lhomme,Lcouleur, R.drawable.ic_adidas_homme,7200));
+        produits.add(new Produit("Basket adidas  orignials style sport ","adidas",Lhomme,Lcouleur,R.drawable.ic_adidas_homme1,7500));
+        produits.add(new Produit("Chaussure adidas  orignials style sport ","adidas",Lhomme,Lcouleur,R.drawable.ic_adidas_homme4,9000));
+        produits.add(new Produit("Chaussure adidas  orignials style sport ","adidas",Lhomme,Lcouleur,R.drawable.ic_adidas_baskets,8000));
+        produits.add(new Produit("Basket montante adidas  orignials style sport ","adidas",Lcouleur,Lhomme,R.drawable.ic_adidas_originals,5500));
 
         return produits;
     }
@@ -461,11 +580,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         List<Produit> produits= new ArrayList<Produit>();
         //Chassure Femme
-        produits.add(new Produit("Chaussure Ballerines pour tous les jours  ","adidas",Lhomme,R.drawable.ic_ballerine_dune_6097207_2,7200));
-        produits.add(new Produit("Chaussure talons bas  ","Gucci",Lhomme,R.drawable.ic_zalando_2,7500));
-        produits.add(new Produit("Chaussure talon haut ","Gucci",Lhomme,R.drawable.ic_zalando_chaussure_4,9000));
-        produits.add(new Produit("Chaussure ballerine pour tous les jours ","adidas",Lhomme,R.drawable.ic_love_moschino_ballerines_noir,8000));
-        produits.add(new Produit("Chaussure pour tous les jours ","adidas",Lhomme,R.drawable.ic_soldes_zalando,5500));
+        produits.add(new Produit("Chaussure Ballerines pour tous les jours  ","adidas",Lhomme,Lcouleur,R.drawable.ic_ballerine_dune_6097207_2,7200));
+        produits.add(new Produit("Chaussure talons bas  ","Gucci",Lhomme,Lcouleur,R.drawable.ic_zalando_2,7500));
+        produits.add(new Produit("Chaussure talon haut ","Gucci",Lhomme,Lcouleur,R.drawable.ic_zalando_chaussure_4,9000));
+        produits.add(new Produit("Chaussure ballerine pour tous les jours ","adidas",Lhomme,Lcouleur,R.drawable.ic_love_moschino_ballerines_noir,8000));
+        produits.add(new Produit("Chaussure pour tous les jours ","adidas",Lhomme,Lcouleur,R.drawable.ic_soldes_zalando,5500));
 
         return produits;
     }
@@ -473,12 +592,279 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         List<Produit> produits= new ArrayList<Produit>();
         //Chassure Enfant
-        produits.add(new Produit("Basket  style sport ", "adidas",Lhomme,R.drawable.ic_chaussure_enfant1, 7200));
-        produits.add(new Produit("Chaussure style classique ", "adidas",Lhomme,R.drawable.ic_chassure_enfant3, 7500));
-        produits.add(new Produit("Chaussure style sport ", "adidas", Lhomme, R.drawable.ic_chaussure_enfant2, 9000));
-        produits.add(new Produit("Basket adidas  orignials style sport ", "adidas", Lhomme, R.drawable.ic_chaussures_enfant,8000));
-        produits.add(new Produit("Basket adidas  orignials style sport ","adidas",Lhomme,R.drawable.ic_chaussure_enfant4,5500));
+        produits.add(new Produit("Basket  style sport ", "adidas",Lhomme,Lcouleur,R.drawable.ic_chaussure_enfant1, 7200));
+        produits.add(new Produit("Chaussure style classique ", "adidas",Lhomme,Lcouleur,R.drawable.ic_chassure_enfant3, 7500));
+        produits.add(new Produit("Chaussure style sport ", "adidas", Lhomme,Lcouleur, R.drawable.ic_chaussure_enfant2, 9000));
+        produits.add(new Produit("Basket adidas  orignials style sport ", "adidas", Lhomme, Lcouleur,R.drawable.ic_chaussures_enfant,8000));
+        produits.add(new Produit("Basket adidas  orignials style sport ","adidas",Lhomme,Lcouleur,R.drawable.ic_chaussure_enfant4,5500));
 
         return produits;
+    }
+    public List<Produit> creerMontreEnfant()
+    {
+        List<Produit> produits= new ArrayList<Produit>();
+        //Montre Enfant
+        produits.add(new Produit("Montre enfant solide", "lego",R.drawable.ic_montreenfan1, 7200));
+        produits.add(new Produit("Montre enfant solide", "dora",R.drawable.ic_montreenfan2, 3200));
+        produits.add(new Produit("Montre enfant solide", "zuchi",R.drawable.ic_montreenfan3, 2200));
+        produits.add(new Produit("Montre enfant solide", "gon",R.drawable.ic_montreenfan4, 1200));
+        produits.add(new Produit("Montre enfant solide", "flavio",R.drawable.ic_montreenfan5, 700));
+        produits.add(new Produit("Montre enfant solide", "kilua",R.drawable.ic_montreenfan6, 900));
+        produits.add(new Produit("Montre enfant solide", "hisoka",R.drawable.ic_montreenfan7, 999));
+        produits.add(new Produit("Montre enfant solide", "urushima",R.drawable.ic_montreenfan8, 7200));
+
+
+
+        return produits;
+    }
+
+    public List<Produit> creerMontreHomme()
+    {
+        List<Produit> produits= new ArrayList<Produit>();
+        //Montre Enfant
+        produits.add(new Produit("Montre homme elegant", "lego",R.drawable.ic_montrehomme1, 7200));
+        produits.add(new Produit("Montre homme elegant", "dora",Lenfant,R.drawable.ic_montrehomme2, 3200));
+        produits.add(new Produit("Montre homme elegant", "zuchi",Lenfant,R.drawable.ic_montrehomme3, 2200));
+        produits.add(new Produit("Montre homme elegant", "gon",Lenfant,R.drawable.ic_montrehomme4, 1200));
+        produits.add(new Produit("Montre homme elegant", "flavio",Lenfant,R.drawable.ic_montrehomme5, 700));
+        produits.add(new Produit("Montre homme elegant", "kilua",Lenfant,R.drawable.ic_montrehomme6, 900));
+        produits.add(new Produit("Montre homme elegant", "hisoka",Lenfant,R.drawable.ic_montrehomme7, 999));
+        produits.add(new Produit("Montre homme elegant", "urushima",Lenfant,R.drawable.ic_montrehomme8, 7200));
+
+
+
+        return produits;
+    }
+
+    public List<Produit> creerMontreFemme() {
+        List<Produit> produits = new ArrayList<Produit>();
+        produits.add(new Produit("Montre femme elegante", "zara",R.drawable.ic_montrefemme1, 7200));
+        produits.add(new Produit("Montre femme elegante", "mongo",R.drawable.ic_montrefemme2, 4300));
+        produits.add(new Produit("Montre femme elegante", "timsah",R.drawable.ic_montrefemme3, 9400));
+        produits.add(new Produit("Montre femme elegante", "triicoo",R.drawable.ic_montrefemme4, 10000));
+        produits.add(new Produit("Montre femme elegante", "ricci",R.drawable.ic_montrefemme5, 7900));
+        produits.add(new Produit("Montre femme elegante", "dior",R.drawable.ic_montrefemme6, 7300));
+        produits.add(new Produit("Montre femme elegante", "zara",R.drawable.ic_montrefemme7, 8400));
+        produits.add(new Produit("Montre femme elegante", "dior",R.drawable.ic_montrefemme8, 6600));
+
+
+
+        return produits;
+
+    }
+
+    public List<Produit> creerJupeFemme() {
+        List<Produit> produits = new ArrayList<Produit>();
+
+        produits.add(new Produit("Jupe femme nouvelle collection", "zara",R.drawable.ic_jupefemme1, 7200));
+        produits.add(new Produit("Jupe femme nouvelle collection", "mongo",R.drawable.ic_jupefemme2, 4300));
+        produits.add(new Produit("Jupe femme nouvelle collection", "timsah",R.drawable.ic_jupefemme3, 9400));
+        produits.add(new Produit("Jupe femme nouvelle collection", "triicoo",R.drawable.ic_jupefemme4, 10000));
+        produits.add(new Produit("Jupe femme nouvelle collection", "ricci",R.drawable.ic_jupefemme5, 7900));
+        produits.add(new Produit("Jupe femme nouvelle collection", "dior",R.drawable.ic_jupefemme6, 7300));
+
+
+        return produits;
+
+    }
+
+    public List<Produit> creerPantalonFemme() {
+        List<Produit> produits = new ArrayList<Produit>();
+
+        produits.add(new Produit("Pantalon femme nouvelle collection", "zara",R.drawable.ic_pantalonfemme1, 7200));
+        produits.add(new Produit("Pantalon femme nouvelle collection", "mongo",R.drawable.ic_pantalonfemme2, 4300));
+        produits.add(new Produit("Pantalon femme nouvelle collection", "timsah",R.drawable.ic_pantalonfemme3, 9400));
+        produits.add(new Produit("Pantalon femme nouvelle collection", "triicoo",R.drawable.ic_pantalonfemme4, 10000));
+        produits.add(new Produit("Pantalon femme nouvelle collection", "ricci",R.drawable.ic_pantalonfemme5, 7900));
+        produits.add(new Produit("Pantalon femme nouvelle collection", "dior",R.drawable.ic_pantalonfemme6, 7300));
+        produits.add(new Produit("Pantalon femme nouvelle collection", "dior",R.drawable.ic_pantalonfemme7, 7300));
+
+
+
+        return produits;
+
+    }
+
+    public List<Produit> creerBagueFemme() {
+        List<Produit> produits = new ArrayList<Produit>();
+
+        produits.add(new Produit("Bague femme nouvelle collection", "zara",R.drawable.ic_bague1, 7200));
+        produits.add(new Produit("Bague femme nouvelle collection", "mongo",R.drawable.ic_bague2, 4300));
+        produits.add(new Produit("Bague femme nouvelle collection", "timsah",R.drawable.ic_bague3, 9400));
+        produits.add(new Produit("Bague femme nouvelle collection", "triicoo",R.drawable.ic_bague4, 10000));
+        produits.add(new Produit("Bague femme nouvelle collection", "ricci",R.drawable.ic_bague5, 7900));
+
+
+
+
+        return produits;
+
+    }
+
+    public List<Produit> creerLunetteFemme() {
+        List<Produit> produits = new ArrayList<Produit>();
+
+        produits.add(new Produit("Lunette femme nouvelle collection", "zara",R.drawable.ic_lunettefemme1, 7200));
+        produits.add(new Produit("Lunette femme nouvelle collection", "mongo",R.drawable.ic_lunettefemme2, 4300));
+        produits.add(new Produit("Lunette femme nouvelle collection", "timsah",R.drawable.ic_lunettefemme3, 9400));
+        produits.add(new Produit("Lunette femme nouvelle collection", "triicoo",R.drawable.ic_lunettefemme4, 10000));
+        produits.add(new Produit("Lunette femme nouvelle collection", "ricci",R.drawable.ic_lunettefemme5, 7900));
+
+
+
+
+        return produits;
+
+    }
+
+    public List<Produit> creerLunetteHomme() {
+        List<Produit> produits = new ArrayList<Produit>();
+
+        produits.add(new Produit("Lunette homme nouvelle collection", "rayban",R.drawable.ic_lunettehomme1, 7200));
+        produits.add(new Produit("Lunette homme nouvelle collection", "massimo",R.drawable.ic_lunettehomme2, 4300));
+        produits.add(new Produit("Lunette homme nouvelle collection", "dior",R.drawable.ic_lunettehomme3, 9400));
+        produits.add(new Produit("Lunette homme nouvelle collection", "carrera",R.drawable.ic_lunettehomme4, 10000));
+
+
+
+
+        return produits;
+
+    }
+
+
+    public List<Produit> creerSacfemme() {
+        List<Produit> produits = new ArrayList<Produit>();
+
+        produits.add(new Produit("Sac femme nouvelle collection", "gucci",R.drawable.ic_sacfemme1, 9000));
+        produits.add(new Produit("Sac femme nouvelle collection", "massimo",R.drawable.ic_sacfemme2, 4300));
+        produits.add(new Produit("Sac femme nouvelle collection", "dior",R.drawable.ic_sacfemme3, 9400));
+        produits.add(new Produit("Sac femme nouvelle collection", "ricci",R.drawable.ic_sacfemme4, 2000));
+        produits.add(new Produit("Sac femme nouvelle collection", "guess",R.drawable.ic_sacfemme5, 3000));
+        produits.add(new Produit("Sac femme nouvelle collection", "burburry",R.drawable.ic_sacfemme6, 3200));
+
+
+
+
+
+        return produits;
+
+    }
+
+    public List<Produit> creerCeinturefemme() {
+        List<Produit> produits = new ArrayList<Produit>();
+
+        produits.add(new Produit("ceinture femme nouvelle collection", "Gucci",R.drawable.ic_ceinturefemme1, 9000));
+        produits.add(new Produit("ceinture femme nouvelle collection", "Guess",R.drawable.ic_ceinturefemme2, 4300));
+        produits.add(new Produit("ceinture femme nouvelle collection", "Gucci",R.drawable.ic_ceinturefemme3, 9400));
+        produits.add(new Produit("ceinture femme nouvelle collection", "RRicci",R.drawable.ic_ceinturefemme4, 2000));
+
+
+
+        return produits;
+
+    }
+
+    public List<Produit> creerCeintureHomme() {
+        List<Produit> produits = new ArrayList<Produit>();
+
+        produits.add(new Produit("ceinture homme nouvelle collection", "Gucci",R.drawable.ic_centurehomme1, 5000));
+        produits.add(new Produit("ceinture homme nouvelle collection", "LuisVuitton",R.drawable.ic_centurehomme2, 4300));
+        produits.add(new Produit("ceinture homme nouvelle collection", "Gucci",R.drawable.ic_centurehomme3, 7400));
+        produits.add(new Produit("ceinture homme nouvelle collection", "YvesSaintLaurent",R.drawable.ic_centurehomme4, 2500));
+
+
+
+        return produits;
+
+    }
+
+    public List<Produit> creerCasquetteHomme() {
+        List<Produit> produits = new ArrayList<Produit>();
+
+        produits.add(new Produit("Casquette homme nouvelle collection", "59Fifty",R.drawable.ic_casquettenyhomme1, 3000));
+        produits.add(new Produit("Casquette homme nouvelle collection", "Tommy",R.drawable.ic_casquettetomyhomme2, 2300));
+        produits.add(new Produit("Casquette homme nouvelle collection", "Berret",R.drawable.ic_casquettehomme3, 1400));
+
+
+
+        return produits;
+
+    }
+
+    public List<Produit> creerChapeauFemme() {
+        List<Produit> produits = new ArrayList<Produit>();
+
+        produits.add(new Produit("Casquette homme nouvelle collection", "Brixton",R.drawable.ic_chapeau_brixto, 3000));
+        produits.add(new Produit("Casquette homme nouvelle collection", "Fedora",R.drawable.ic_chapeau_fedora_feutre_classiq, 2300));
+        produits.add(new Produit("Casquette homme nouvelle collection", "Triicoo",R.drawable.ic_chapeaufemme3, 1400));
+
+
+
+        return produits;
+
+    }
+
+    public void insertProduitsbyCat(Categorie categorie){
+        if(categorie.getProduits() == null){
+            if(categorie.getSousCategories() != null){
+                for(int i=0;i<categorie.getSousCategories().size();i++){
+                    this.insertProduitsbyCat(categorie.getSousCategories().get(i));
+                }
+            }
+
+        }
+        else{
+            List<Produit> produits = categorie.getProduits();
+
+            for (int i=0;i<produits.size();i++)
+            {
+                produits.get(i).setQuantite(500);
+                mDatabase.child("produits").push().setValue(produits.get(i).toMap(encoderImage(produits.get(i).getPhoto())));
+
+            }
+
+
+        }
+    }
+
+    public void  constructMapCat(Categorie categorie){
+        HashMap<String,Boolean> sousCat;
+
+        if(categorie.getSousCategories() != null) {
+            sousCat = new HashMap<>();
+            for (Categorie cat : categorie.getSousCategories()) {
+                sousCat.put(cat.getId(), true);
+            }
+            if (categorie.getIcon() == 0) {
+                mDatabase.child("categories").child(categorie.getId()).setValue(categorie.toMap(sousCat));
+            }
+            else {
+                mDatabase.child("categories").child(categorie.getId()).setValue(categorie.toMap(encoderImage(categorie.getIcon()),sousCat));
+            }
+            for (Categorie cat : categorie.getSousCategories()) {
+                this.constructMapCat(cat);
+            }
+        }
+        else{
+            if (categorie.getIcon() == 0) {
+                mDatabase.child("categories").child(categorie.getId()).setValue(categorie.toMap(null));
+            }
+            else {
+                mDatabase.child("categories").child(categorie.getId()).setValue(categorie.toMap(encoderImage(categorie.getIcon()),null));
+            }
+        }
+    }
+
+
+    public String encoderImage(int photo)
+    {
+        Bitmap bmp =  BitmapFactory.decodeResource(getResources(),photo);//your image
+        ByteArrayOutputStream bYtE = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, bYtE);
+        bmp.recycle();
+        byte[] byteArray = bYtE.toByteArray();
+        String encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        return encodedImage;
     }
 }

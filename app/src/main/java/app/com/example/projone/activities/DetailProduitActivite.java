@@ -15,7 +15,7 @@ public class DetailProduitActivite extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_produit_activite);
         DetailFragment detailFragment = new DetailFragment();
-        Toast.makeText(DetailProduitActivite.this, "sqkldqskld", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(DetailProduitActivite.this, "sqkldqskld", Toast.LENGTH_SHORT).show();
         Intent intent = getIntent();
         Bundle bundle = new Bundle();
         bundle.putSerializable("produit",intent.getSerializableExtra("produit"));

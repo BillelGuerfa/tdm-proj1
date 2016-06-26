@@ -52,7 +52,7 @@ public class FragementListeProduits extends Fragment {
                     Intent intent = new Intent(getActivity(),DetailProduitActivite.class);
                     intent.putExtra("produit",listp.get(position));
                     startActivity(intent);
-                    Toast.makeText(view.getContext(), "fonctionne", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(view.getContext(), "fonctionne", Toast.LENGTH_SHORT).show();
                 }
             });
         }

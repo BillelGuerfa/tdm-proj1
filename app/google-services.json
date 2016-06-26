@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "243457055486",
+    "firebase_url": "https://gyzshop-1ac72.firebaseio.com",
+    "project_id": "gyzshop-1ac72",
+    "storage_bucket": "gyzshop-1ac72.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243457055486:android:7b0af794d21b0512",
+        "android_client_info": {
+          "package_name": "app.com.example.billelguerfa.projone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "243457055486-7b4rsilpq3j2kgojo40fli6p5i7goh8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ7fv48gmv04_LJSjtBrtoF34c5jpdk2w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

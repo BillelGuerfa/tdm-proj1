@@ -1,6 +1,10 @@
 package app.com.example.billelguerfa.projone.modele;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Billel Guerfa on 04/04/2016.
@@ -81,7 +85,6 @@ public class Utilisateur implements Serializable {
         this.photo_id = photo_id;
     }
 
-
     public void setNom(String nom) {
         this.nom = nom;
     }
@@ -107,6 +110,20 @@ public class Utilisateur implements Serializable {
     }
 
 
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("nom", nom);
+        result.put("prenom",prenom);
+        result.put("photo",photo_id);
+        result.put("email",email);
+        result.put("uid",user_name);
+        result.put("password",password);
+        result.put("age",age);
+        result.put("panier",panier);
+
+        return result;
+    }
 
 
 }

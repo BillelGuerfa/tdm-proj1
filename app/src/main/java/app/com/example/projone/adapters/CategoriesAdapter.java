@@ -1,6 +1,8 @@
 package app.com.example.projone.adapters;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -61,7 +63,15 @@ public class CategoriesAdapter extends BaseAdapter {
         }
         ImageView icon = (ImageView) convertView.findViewById(R.id.sous_cat_image);
         TextView nom = (TextView) convertView.findViewById(R.id.sous_cat_name);
-        icon.setImageResource(this.categorie.getSousCategories().get(position).getIcon());
+        String base64Image = this.categorie.getSousCategories().get(position).getPhoto();
+        if(base64Image != null){
+            byte[] imageAsBytes = Base64.decode(base64Image.getBytes(), Base64.DEFAULT);
+            icon.setImageBitmap(
+                    BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)
+            );
+        }
+
+        //icon.setImageResource(this.categorie.getSousCategories().get(position).getIcon());
         nom.setText(this.categorie.getSousCategories().get(position).getNom());
 
         return convertView;

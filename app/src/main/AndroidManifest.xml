@@ -18,10 +18,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="app.com.example.projone.activities.Panier_activity" />
-        <activity android:name="app.com.example.projone.activities.ListeProduitsActivity" />
-        <activity android:name="app.com.example.projone.activities.DetailProduitActivite" />
-        <activity android:name="app.com.example.projone.activities.CommandesActivity"></activity>
+        <activity android:name="app.com.example.projone.activities.Panier_activity"
+                  android:label="@string/title_activity_panier"/>
+        <activity android:name="app.com.example.projone.activities.ListeProduitsActivity"
+                    android:label="@string/title_activity_liste_produits"/>
+        <activity android:name="app.com.example.projone.activities.DetailProduitActivite"
+                 android:label="@string/title_activity_detail_produit"/>
+        <activity android:name="app.com.example.projone.activities.CommandesActivity"
+                    android:label="@string/title_activity_liste_commandes"/>
     </application>
 
 </manifest>

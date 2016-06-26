@@ -1,14 +1,19 @@
 package app.com.example.billelguerfa.projone.modele;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Billel Guerfa on 03/04/2016.
  */
 public class Produit implements Serializable{
     private int photo;
+    private int quantite;
     private String nom;
     private String couleur;
     private String marque;
@@ -20,6 +25,8 @@ public class Produit implements Serializable{
     private String couleurChoisie;
     private Categorie categorie;
     private String description;
+    private String taille;
+    private int longeur;
 
     public String getDescription() {
         return description;
@@ -68,6 +75,15 @@ public class Produit implements Serializable{
         this.categorie=categorie;
 
     }
+
+    public int getQuantite() {
+        return quantite;
+    }
+
+    public void setQuantite(int quantite) {
+        this.quantite = quantite;
+    }
+
     public List<String> getCouleurs() {
         return couleurs;
     }
@@ -131,14 +147,14 @@ public class Produit implements Serializable{
     }
 
 
-    public Produit(String nom, String couleur, String marque, String reference, String taille, int longeur) {
+   /* public Produit(String nom, String couleur, String marque, String reference, String taille, int longeur) {
         this.nom = nom;
         this.couleur = couleur;
         this.marque = marque;
         this.reference = reference;
         this.taille = taille;
         this.longeur = longeur;
-    }
+    }*/
 
     public String getNom() {
         return nom;
@@ -188,7 +204,27 @@ public class Produit implements Serializable{
         this.longeur = longeur;
     }
 
-    private String taille;
-    private int longeur;
+
+
+
+
+    @Exclude
+    public Map<String, Object> toMap(String encodage) {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("photo", encodage);
+        result.put("nom", nom);
+        result.put("marque", marque);
+        result.put("prix",prix);
+        result.put("quantite",quantite);
+        result.put("description",description);
+        result.put("tailles",tailles);
+        result.put("couleurs",couleurs);
+        result.put("catId",categorie.getId());
+
+
+
+
+        return result;
+    }
 
 }
