@@ -12,14 +12,15 @@ import java.util.Date;
 import app.com.example.billelguerfa.projone.R;
 import app.com.example.billelguerfa.projone.modele.Commande;
 import app.com.example.projone.adapters.CommandesAdapter;
+import app.com.example.services.CommandeService;
 
 public class CommandesActivity extends AppCompatActivity {
     ArrayList<Commande> commandes;
+    CommandeService commandeService = new CommandeService();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_commandes);
-
         createCommandes();
         GridView listeCommandes = (GridView) findViewById(R.id.liste_commandes);
         listeCommandes.setAdapter(new CommandesAdapter(this,this.commandes));

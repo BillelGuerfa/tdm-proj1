@@ -1,5 +1,6 @@
 package app.com.example.projone.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -19,13 +20,17 @@ import java.util.List;
 
 import app.com.example.billelguerfa.projone.R;
 import app.com.example.billelguerfa.projone.modele.Produit;
+import app.com.example.services.PanierService;
 
 public class CustomAdapterForCart extends BaseAdapter {
 
     Context context;
     List<Produit> produitList;
     TextView textViewpanier4 = null;
-    TextView textViewpanierqtte = null;
+    NumberPicker np;
+    TextView tv1, tv2,texttotal;
+
+    //TextView textViewpanierqtte = null;
 
     NumberPicker numberPicker = null;
 
@@ -55,14 +60,24 @@ public class CustomAdapterForCart extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-
+        texttotal = (TextView) ((Activity) context).findViewById(R.id.total);
         convertView = parent.inflate(context, R.layout.activity_custom_adapter_for_cart,null);
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewpanier);
         TextView textViewpanier2 = (TextView) convertView.findViewById(R.id.textViewpanierMarque);
         textViewpanier4 = (TextView) convertView.findViewById(R.id.textViewpanierPrix);
 
-        textViewpanierqtte = (TextView) convertView.findViewById(R.id.textView6);
+
+        tv1 = (TextView) convertView.findViewById(R.id.textViewQteee);
+
+
+
+
+
+
+
+
+        //textViewpanierqtte = (TextView) convertView.findViewById(R.id.textView6);
 
 
         /*numberPicker = (NumberPicker) convertView.findViewById(R.id.numberPicker);
@@ -74,7 +89,8 @@ public class CustomAdapterForCart extends BaseAdapter {
         imageView.setImageResource(produitList.get(position).getPhoto());
         textViewpanier2.setText("Marque: " + produitList.get(position).getMarque());
         textViewpanier4.setText("Prix U: " + (produitList.get(position).getPrix()));
-        textViewpanierqtte.setText("Quantite= "+ 1);
+        tv1.setText("Quantite : " + (produitList.get(position).getQuantite()));
+        //textViewpanierqtte.setText("Quantite= "  );
 
 
         ImageButton button = (ImageButton) convertView.findViewById(R.id.button3);
@@ -84,11 +100,39 @@ public class CustomAdapterForCart extends BaseAdapter {
 
                 Toast.makeText(v.getContext(), "Produit retiré du panier.", Toast.LENGTH_SHORT).show();
                 produitList.remove(position);
+                String tot = "Total : " + PanierService.panier.getTotalPrice();
+                texttotal.setText(tot);
                 notifyDataSetChanged();
 
             }
         });
 
+        Button augQte=(Button) convertView.findViewById(R.id.button);
+        Button subQte=(Button) convertView.findViewById(R.id.button2);
+        tv2 = (TextView) convertView.findViewById(R.id.total);
+        augQte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                produitList.get(position).setQuantite((produitList.get(position).getQuantite()) + 1);
+                String tot = "Total : " + PanierService.panier.getTotalPrice();
+                texttotal.setText(tot);
+                notifyDataSetChanged();
+            }
+        });
+
+        subQte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if( produitList.get(position).getQuantite() > 1) {
+                    produitList.get(position).setQuantite((produitList.get(position).getQuantite()) - 1);
+                    String tot = "Total : " + PanierService.panier.getTotalPrice();
+                    texttotal.setText(tot);
+                    notifyDataSetChanged();
+                }
+            }
+        });
+        /*
         Button button1 = (Button) convertView.findViewById(R.id.button4);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +141,7 @@ public class CustomAdapterForCart extends BaseAdapter {
                 nbPickerDialog();
             }
         });
-
+        */
 
 
 
@@ -116,7 +160,8 @@ public class CustomAdapterForCart extends BaseAdapter {
         {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                textViewpanierqtte.setText(""+newVal);
+
+                //textViewpanierqtte.setText("Quantite= " +newVal);
                 notifyDataSetChanged();
 
             }

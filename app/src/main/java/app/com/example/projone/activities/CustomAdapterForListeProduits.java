@@ -1,6 +1,8 @@
 package app.com.example.projone.activities;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -71,7 +73,13 @@ public class CustomAdapterForListeProduits extends BaseAdapter {
         textView4.setText(resources.getString(R.string.Prix));*/
 
         //remplir
-        imageView.setImageResource(produitList.get(position).getPhoto());
+        String base64Image = produitList.get(position).getImage();
+        if(base64Image != null){
+            byte[] imageAsBytes = Base64.decode(base64Image.getBytes(), Base64.DEFAULT);
+            imageView.setImageBitmap(
+                    BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)
+            );
+        }
         textView2.setText("Marque: " + produitList.get(position).getMarque());
         textView4.setText("Prix: "+ (int) produitList.get(position).getPrix());
 

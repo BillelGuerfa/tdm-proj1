@@ -44,6 +44,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +56,7 @@ import app.com.example.billelguerfa.projone.modele.Categorie;
 import app.com.example.billelguerfa.projone.modele.Produit;
 import app.com.example.projone.adapters.CategoriesAdapter;
 import app.com.example.services.CategorieService;
+import app.com.example.services.PanierService;
 import app.com.example.services.ProduitService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -86,8 +88,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase.setPersistenceEnabled(true);
+        mDatabase = firebaseDatabase.getReference();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
         this._categorieService.getCatgories(valueEventListener);
 
-        /*mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),categorie);
+       /* mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),categorie);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -157,24 +160,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else if (id == R.id.action_cart) {
             //TODO: Intent vers Panier ici.
             List<Produit> produitList = new ArrayList<>();
-            produitList.add(new Produit(R.drawable.ic_italie_paul_et_shark_homme_polos_meilleur_prix_1016,"polo",100));
 
-            produitList.add(new Produit(R.drawable.ic_2013_fashion_mens_stripe_paul_shark_short_polo_shirt_red_grey_black_lrg,"Ralph",200));
-
-            produitList.add(new Produit(R.drawable.ic__32,"Tommy",300));
-
-            produitList.add(new Produit(R.drawable.ic_corec1p11104sfi010_1x,"triicoo",400));
-
-            produitList.add(new Produit(R.drawable.ic_fashion_paul_and_shark_long_sleeved_shirts_best_price_453, "geek", 500));
-
-            produitList.add(new Produit(R.drawable.ic_img_thing, "paul&shark", 500));
-
-            produitList.add(new Produit(R.drawable.ic_nyp0902224_sale_stripes_paul_shark_homme_short_polo_shirt_yellow_boutique_vente, "mongo", 500));
-
-            produitList.add(new Produit(R.drawable.ic__32,"celio",300));
 
             Intent intent = new Intent(this ,Panier_activity.class);
-            intent.putExtra("listp", (ArrayList<Produit>) produitList);
+            intent.putExtra("listp", (Serializable) PanierService.getPanier().getListPanier());
 
             startActivity(intent);
         }
@@ -193,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(adapter.getCategorie() != null && adapter.getCategorie().getParent() != null){
                 adapter.setCategorie(adapter.getCategorie().getParent());
                 adapter.notifyDataSetChanged();
+
             }else {
                 super.onBackPressed();
             }
@@ -244,6 +234,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private GridView listeCategories;
         Categorie categorie;
         CategoriesAdapter adapter;
+        ProduitService produitService = new ProduitService();
+        Intent intent ;
         public PlaceholderFragment() {
         }
 
@@ -266,40 +258,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             categorie = (Categorie) getArguments().getSerializable(ARG_CATEGORIE);
             listeCategories = (GridView) rootView.findViewById(R.id.liste_categories);
             adapter = new CategoriesAdapter(getActivity(),categorie);
+            intent  = new Intent(getActivity() ,ListeProduitsActivity.class);
             listeCategories.setAdapter(adapter);
             listeCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (adapter.getCategorie().getSousCategories().get(position).getSousCategories().isEmpty()) {
+
+                    if (adapter.getCategorie().getSousCategories().get(position).getSousCategories().size() == 0) {
                          //TODO: Create intent here with the product list activity
-                        //TODO: Send to products activity
-                        //TODO:Copy product list here.
-
-
-
-                        ProduitService produitService = new ProduitService();
-                        produitService.getProduitsByCat(adapter.getCategorie().getSousCategories().get(position).getId(), new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                Intent intent = new Intent(getActivity() ,ListeProduitsActivity.class);
-                                ArrayList<Produit> produits = new ArrayList<Produit>();
-                                for(DataSnapshot produit: dataSnapshot.getChildren()){
-                                    produits.add(produit.getValue(Produit.class));
-                                }
-                                intent.putExtra("listp", produits);
-                                if (!produits.isEmpty()) {
-
-                                    startActivity(intent);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
-
+                        Categorie cat = adapter.getCategorie().getSousCategories().get(position);
+                        intent.putExtra("cat",cat.getId());
+                        startActivity(intent);
                     } else {
                         adapter.setCategorie(adapter.getCategorie().getSousCategories().get(position));
                     }
@@ -476,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         chaussuresEnfants.setProduits(this.creerChaussureEnfant());
 
         //insererCategorie(this.categorie);
-        //constructMapCat(this.categorie);
+        constructMapCat(this.categorie);
         insertProduitsbyCat(this.categorie);
     }
 

@@ -13,6 +13,16 @@ import java.util.Map;
  */
 public class Produit implements Serializable{
     private int photo;
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     private int quantite;
     private String nom;
     private String couleur;
@@ -27,6 +37,9 @@ public class Produit implements Serializable{
     private String description;
     private String taille;
     private int longeur;
+
+    public Produit() {
+    }
 
     public String getDescription() {
         return description;
@@ -211,7 +224,7 @@ public class Produit implements Serializable{
     @Exclude
     public Map<String, Object> toMap(String encodage) {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("photo", encodage);
+        result.put("image", encodage);
         result.put("nom", nom);
         result.put("marque", marque);
         result.put("prix",prix);

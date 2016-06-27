@@ -19,13 +19,16 @@
             </intent-filter>
         </activity>
         <activity android:name="app.com.example.projone.activities.Panier_activity"
-                  android:label="@string/title_activity_panier"/>
+            android:label="@string/title_activity_panier"
+            />
         <activity android:name="app.com.example.projone.activities.ListeProduitsActivity"
                     android:label="@string/title_activity_liste_produits"/>
         <activity android:name="app.com.example.projone.activities.DetailProduitActivite"
                  android:label="@string/title_activity_detail_produit"/>
         <activity android:name="app.com.example.projone.activities.CommandesActivity"
                     android:label="@string/title_activity_liste_commandes"/>
+
+        <service android:name="app.com.example.services.ViderPanierService"/>
     </application>
 
 </manifest>

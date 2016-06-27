@@ -1,14 +1,19 @@
 package app.com.example.projone.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +33,15 @@ import java.util.List;
 import app.com.example.billelguerfa.projone.R;
 import app.com.example.billelguerfa.projone.modele.Panier;
 import app.com.example.billelguerfa.projone.modele.Produit;
+import app.com.example.services.PanierService;
+import app.com.example.services.ViderPanierService;
 
 
 public class DetailFragment extends android.app.Fragment {
     Produit produit;
-    Panier panier;
+    Panier panier =new Panier();
+    EditText quantiteText;
+    int i = 0;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +61,7 @@ public class DetailFragment extends android.app.Fragment {
 
         produit= (Produit) bundle.getSerializable("produit");
         if (bundle!=null) {
+             quantiteText = (EditText) view.findViewById(R.id.editQuantite);
             ImageView coverImage = (ImageView) view.findViewById(R.id.coverImage);
             TextView textNom= (TextView) view.findViewById(R.id.textNom);
             TextView textPrix=(TextView) view.findViewById(R.id.textPrix);
@@ -73,13 +83,19 @@ public class DetailFragment extends android.app.Fragment {
             textNom.setText(produit.getNom());
             textPrix.setText(""+produit.getPrix()+getResources().getString(R.string.textDeviseAlgerien));
             textContenu.setText(produit.getDescription());
-            coverImage.setImageResource(produit.getPhoto());
+            String base64Image = produit.getImage();
+            if(base64Image != null){
+                byte[] imageAsBytes = Base64.decode(base64Image.getBytes(), Base64.DEFAULT);
+                coverImage.setImageBitmap(
+                        BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)
+                );
+            }
 
             //-----------changer le texte taille par text pointure si c des chaussures-----------------//
-           if (produit.getCategorie().getNom().equals("Chaussures"))
+           /* if (produit.getCategorie().getNom().equals("Chaussures"))
             {
                 textTaille.setText(getResources().getString(R.string.textPointure));
-            }
+            }*/
 
             ///-------------------------------------------------------------------------------------/////////
 
@@ -140,8 +156,26 @@ public class DetailFragment extends android.app.Fragment {
 
             ajouterPanier.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v){
                     //panier.ajouterProduit(produit);
+
+                    if (!PanierService.panier.isProductExistant(produit.getNom())) {
+                        if (PanierService.panier.getListPanier().isEmpty())
+                        {
+                            AlarmManager alarmManager= (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+                            Intent intent = new Intent(getActivity(),ViderPanierService.class);
+                            PendingIntent pendingIntent= PendingIntent.getService(getActivity(),0,intent,0);
+                            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() +1000 *30, pendingIntent);
+                            Toast.makeText(v.getContext(), "tache planifié", Toast.LENGTH_SHORT).show();
+
+                        }
+                        produit.setQuantite(Integer.parseInt(quantiteText.getText().toString()));
+                        PanierService.panier.ajouterProduit(produit);
+                        Toast.makeText(v.getContext(), "produit ajouté au panier", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(v.getContext(), "produit existant", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
