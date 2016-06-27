@@ -24,6 +24,7 @@ public class Produit implements Serializable{
     }
 
     private int quantite;
+    private String catId;
     private String nom;
     private String couleur;
     private String marque;
@@ -37,6 +38,14 @@ public class Produit implements Serializable{
     private String description;
     private String taille;
     private int longeur;
+
+    public String getCatId() {
+        return catId;
+    }
+
+    public void setCatId(String catId) {
+        this.catId = catId;
+    }
 
     public Produit() {
     }

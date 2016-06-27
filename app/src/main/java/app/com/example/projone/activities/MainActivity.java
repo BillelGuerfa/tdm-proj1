@@ -1,8 +1,10 @@
 package app.com.example.projone.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +17,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -23,6 +26,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,12 +35,18 @@ import android.view.ViewGroup;
 
 import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -58,6 +68,7 @@ import app.com.example.projone.adapters.CategoriesAdapter;
 import app.com.example.services.CategorieService;
 import app.com.example.services.PanierService;
 import app.com.example.services.ProduitService;
+import app.com.example.services.UserService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Categorie categorie;
@@ -68,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     List<String> Lhomme=new ArrayList<>();
     List<String> l2=new ArrayList<>();
     private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -91,6 +105,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseDatabase.setPersistenceEnabled(true);
         mDatabase = firebaseDatabase.getReference();
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    UserService.firebaseUser = user;
+                } else {
+                    // User is signed out
+                    UserService.firebaseUser = null;
+                }
+                // ...
+            }
+        };
+        mAuth.addAuthStateListener(mAuthListener);
+        /*mAuth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(that,"Auth failed",Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });*/
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -138,6 +180,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -451,19 +500,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showLoginDialog()
     {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(R.layout.login) ;
+        LayoutInflater layoutInflater = LayoutInflater.from(that);
+        final View view = layoutInflater.inflate(R.layout.login,null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(view) ;
         builder.setTitle("Se connecter");
         builder.setPositiveButton("connecter", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                EditText email = (EditText) view.findViewById(R.id.email);
+                EditText password = (EditText) view.findViewById(R.id.password);
+                mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+                        .addOnCompleteListener((Activity) that, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                if (!task.isSuccessful()) {
+                                    Log.w("lol", "signInWithEmail", task.getException());
+                                    Toast.makeText(that, "Authentication failed." ,
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(that, "Vous étes maintenant connecté", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
             }
         });
 
         builder.setNegativeButton("Creer un compte", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                EditText email = (EditText) view.findViewById(R.id.email);
+                EditText password = (EditText) view.findViewById(R.id.password);
+                mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener((Activity) that, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if (!task.isSuccessful()) {
+                            Log.w("lol", "signInWithEmail", task.getException());
+                            Toast.makeText(that, "registration failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(that, "Vous étes maintenant connecté", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                });
+
 
             }
         });

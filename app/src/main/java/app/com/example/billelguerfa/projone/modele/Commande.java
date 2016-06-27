@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import app.com.example.services.UserService;
+
 /**
  * Created by Billel Guerfa on 04/04/2016.
  */
@@ -35,7 +37,11 @@ public class Commande implements Serializable{
         this.etat = etat;
     }
 
-
+    public Commande(String date, String etat, List<Produit> produits) {
+        this.date = date;
+        this.etat = etat;
+        this.produits = produits;
+    }
 
     public String getEtat() {
         return etat;
@@ -63,15 +69,12 @@ public class Commande implements Serializable{
     }
 
     @Exclude
-    public Map<String, Object> toMap(Utilisateur utilisateur) {
+    public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("date", date);
-        result.put("uid",utilisateur.getUser_name());
+        result.put("uid", UserService.firebaseUser.getUid());
         result.put("produits", produits);
         result.put("etat", etat);
-
-
-
         return result;
     }
 }

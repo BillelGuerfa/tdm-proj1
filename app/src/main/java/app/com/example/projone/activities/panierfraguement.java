@@ -19,12 +19,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import app.com.example.billelguerfa.projone.R;
+import app.com.example.billelguerfa.projone.modele.Commande;
 import app.com.example.billelguerfa.projone.modele.Panier;
 import app.com.example.billelguerfa.projone.modele.Produit;
+import app.com.example.services.CommandeService;
 import app.com.example.services.PanierService;
+import app.com.example.services.UserService;
 import app.com.example.services.ViderPanierService;
 
 public class panierfraguement extends Fragment {
@@ -32,6 +36,7 @@ public class panierfraguement extends Fragment {
     TextView tv;
     View view;
     PanierService panierService = new PanierService();
+    CommandeService commandeService = new CommandeService();
     public panierfraguement() {
     }
 
@@ -93,9 +98,18 @@ public class panierfraguement extends Fragment {
                 Toast.makeText(v.getContext(), "tache planifié annulé", Toast.LENGTH_SHORT).show();
                 Intent intent1 = new Intent(getActivity(), Panier_activity.class);
                 List<Produit> produits = new ArrayList<>();
-                panierService.majStock( (ArrayList<Produit>) PanierService.panier.getListPanier());
-                PanierService.panier.setListPanier(produits);
-                startActivity(intent1);
+                if(UserService.firebaseUser != null){
+                    panierService.majStock((ArrayList<Produit>) PanierService.panier.getListPanier());
+                    Date date = new Date();
+                    Commande commande = new Commande(date.toString(),"En Attente",(ArrayList<Produit>) PanierService.panier.getListPanier());
+                    commandeService.sendCommande(commande);
+                    PanierService.panier.setListPanier(produits);
+                    startActivity(intent1);
+                }
+                else{
+                    Toast.makeText(getActivity(), "Vous devez d'abord vous connecter", Toast.LENGTH_LONG).show();
+                }
+
 
 
             }

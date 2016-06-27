@@ -15,13 +15,13 @@ public class CommandeService {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     public CommandeService() {
     }
-    public void getCommandes(String uid, ValueEventListener valueEventListener){
-           DatabaseReference myRef = database.getReference("users/"+uid+"/commandes");
-           myRef.addValueEventListener(valueEventListener);
+    public void getCommandes( ValueEventListener valueEventListener){
+           DatabaseReference myRef = database.getReference("commandes/"+UserService.firebaseUser.getUid());
+           myRef.addListenerForSingleValueEvent(valueEventListener);
     }
-    public void sendCommande(String uid,Commande commande){
-          DatabaseReference myRef = database.getReference("users/"+uid+"/commandes");
+    public void sendCommande(Commande commande){
+          DatabaseReference myRef = database.getReference("commandes/"+UserService.firebaseUser.getUid());
           String key = myRef.push().getKey();
-          myRef.child(key).setValue(commande,Commande.class);
+          myRef.child(key).setValue(commande.toMap());
     }
 }

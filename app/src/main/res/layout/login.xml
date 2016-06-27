@@ -7,18 +7,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Nom d&apos;utilisateur"
-        android:id="@+id/textView2"
+        android:text="Email"
+        android:id="@+id/emailLabel"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:layout_below="@+id/textView2"
+        android:inputType="textEmailAddress"
+        android:id="@+id/email"
+        android:layout_below="@id/emailLabel"
         android:layout_centerHorizontal="true"
-        android:text="                                                   " />
+        android:hint="cb_guerfa@esi.dz"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,7 +27,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Introduire MDP"
         android:id="@+id/textView3"
-        android:layout_below="@+id/editText"
+        android:layout_below="@id/email"
         android:layout_centerHorizontal="true" />
 
     <EditText
@@ -34,8 +35,8 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/editText2"
-        android:layout_below="@+id/textView3"
+        android:id="@+id/password"
+        android:layout_below="@id/textView3"
         android:layout_centerHorizontal="true" />
 
 

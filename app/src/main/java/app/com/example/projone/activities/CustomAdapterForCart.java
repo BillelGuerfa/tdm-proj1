@@ -3,9 +3,11 @@ package app.com.example.projone.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -85,8 +87,13 @@ public class CustomAdapterForCart extends BaseAdapter {
         numberPicker.setMinValue(1);
         numberPicker.setWrapSelectorWheel(false);*/
 
-
-        imageView.setImageResource(produitList.get(position).getPhoto());
+        String base64Image = produitList.get(position).getImage();
+        if(base64Image != null){
+            byte[] imageAsBytes = Base64.decode(base64Image.getBytes(), Base64.DEFAULT);
+            imageView.setImageBitmap(
+                    BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)
+            );
+        }
         textViewpanier2.setText("Marque: " + produitList.get(position).getMarque());
         textViewpanier4.setText("Prix U: " + (produitList.get(position).getPrix()));
         tv1.setText("Quantite : " + (produitList.get(position).getQuantite()));
